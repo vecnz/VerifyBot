@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "5GT6R+J0bJpCo4CbUu/EaSpP3yAO8L0Zqbhqarga8mX7KG2Biu78DI/LUsGy5iPP26RK0wrtBnNsxqqtDQ91lg==",
+  "success": true,
+  "projectFilePath": "/home/nightfish/src/VerifyBot/src/VerifyBot/VerifyBot/VerifyBot.csproj",
+  "expectedPackageFiles": [
+    "/home/nightfish/.nuget/packages/discord.net/3.4.1/discord.net.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.commands/3.4.1/discord.net.commands.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.core/3.4.1/discord.net.core.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.interactions/3.4.1/discord.net.interactions.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.rest/3.4.1/discord.net.rest.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.webhook/3.4.1/discord.net.webhook.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/discord.net.websocket/3.4.1/discord.net.websocket.3.4.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/system.collections.immutable/5.0.0/system.collections.immutable.5.0.0.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/system.interactive.async/5.0.0/system.interactive.async.5.0.0.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/system.linq.async/5.0.0/system.linq.async.5.0.0.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/system.reactive/5.0.0/system.reactive.5.0.0.nupkg.sha512",
+    "/home/nightfish/.nuget/packages/system.valuetuple/4.5.0/system.valuetuple.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
