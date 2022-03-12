@@ -45,6 +45,8 @@ namespace VerifyBot.Services.DiscordBot
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Discord bot starting...");
+            await _discordClient.SetActivityAsync(new Game(_botOptions.StatusText));
+            
             _logger.LogDebug("Logging in...");
             await _discordClient.LoginAsync(TokenType.Bot, _botOptions.Token);
             _logger.LogDebug("Connecting to websocket...");
