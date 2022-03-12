@@ -21,6 +21,7 @@ namespace VerifyBot.Services.DiscordBot.Helpers
                 DefaultRetryMode = RetryMode.AlwaysFail
             }));
             services.AddSingleton<IHostedService, DiscordBot>(); // The IHostedService interface is convinient for this use since it has start and stop methods.
+            services.AddScoped<SlashCommandHandler>();
         }
     }
 }

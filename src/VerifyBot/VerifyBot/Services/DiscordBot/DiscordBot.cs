@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using VerifyBot.Services.DiscordBot.Configuration;
 
 namespace VerifyBot.Services.DiscordBot
@@ -32,15 +34,17 @@ namespace VerifyBot.Services.DiscordBot
         public DiscordBot(
             DiscordSocketClient discordClient,
             IOptions<DiscordBotOptions> botOptions,
-            ILogger<DiscordBot> logger)
+            ILogger<DiscordBot> logger,
+            SlashCommandHandler slashCommandHandler)
         {
             _discordClient = discordClient ?? throw new ArgumentNullException(nameof(discordClient));
             _botOptions = botOptions?.Value ?? throw new ArgumentNullException(nameof(botOptions));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             
             _discordClient.Log += DiscordClientOnLog;
+            slashCommandHandler.Register();
         }
-        
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Discord bot starting...");
@@ -61,6 +65,5 @@ namespace VerifyBot.Services.DiscordBot
             _logger.Log(level, "{source} {message}", arg.Source, arg.Message, arg.Exception);
             return Task.CompletedTask;
         }
-
     }
 }
