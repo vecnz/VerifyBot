@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -17,7 +18,9 @@ namespace VerifyBot
             // directly since some services require setup with things like configuration options.
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((_, services) =>
-                    services.AddHostedService<Startup>());
+                    services.AddHostedService<Startup>())
+                .ConfigureAppConfiguration((context, builder) =>
+                    builder.AddUserSecrets<Program>());
         }
     }
 }
