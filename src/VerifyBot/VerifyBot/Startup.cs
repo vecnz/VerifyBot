@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +12,8 @@ namespace VerifyBot
     public class Startup : IHostedService
     {
         private readonly IConfiguration _configuration;
-
+        private IEnumerable<IHostedService> _runningServices;
+        
         public Startup(IConfiguration configuration, IHostApplicationLifetime appLifetime)
         {
             _configuration = configuration;
@@ -29,13 +32,16 @@ namespace VerifyBot
             ConfigureServices(services);
             var provider = services.BuildServiceProvider();
             
-            return Task.CompletedTask;
+            _runningServices = provider.GetServices<IHostedService>();
+            return Task.WhenAll(_runningServices.Select(s => 
+                s.StartAsync(cancellationToken)));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Log.Information("Application stopping.");
-            return Task.CompletedTask;
+            return Task.WhenAll(_runningServices.Select(s => 
+                s.StopAsync(cancellationToken)));
         }
         
         /// <summary>

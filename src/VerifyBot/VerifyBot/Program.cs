@@ -12,6 +12,9 @@ namespace VerifyBot
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
+            // Create generic host and use startup service.
+            // We use a startup service here instead of just adding each individual service
+            // directly since some services require setup with things like configuration options.
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((_, services) =>
                     services.AddHostedService<Startup>());
