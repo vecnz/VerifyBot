@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using VerifyBot.Services.DiscordBot.Helpers;
 
 namespace VerifyBot
 {
@@ -14,10 +15,10 @@ namespace VerifyBot
         private readonly IConfiguration _configuration;
         private IEnumerable<IHostedService> _runningServices;
         
-        public Startup(IConfiguration configuration, IHostApplicationLifetime appLifetime)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
                 .CreateLogger();
@@ -50,6 +51,7 @@ namespace VerifyBot
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(x => x.AddSerilog());
+            services.AddDiscordBot(_configuration);
         }
     }
 }
