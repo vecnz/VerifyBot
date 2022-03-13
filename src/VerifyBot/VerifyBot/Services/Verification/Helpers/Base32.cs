@@ -48,7 +48,7 @@ namespace VerifyBot.Services.Verification.Helpers
             if (arrayIndex != byteCount)
             {
                 returnArray[arrayIndex] = curByte;
-            }https://stackoverflow.com/users/904128/shane
+            }
 
             return returnArray;
         }
