@@ -4,7 +4,7 @@ using VerifyBot.Services.Storage;
 
 namespace VerifyBot.Services.Verification
 {
-    public class VerificationService : IStorageService
+    public class VerificationService
     {
         private readonly ILogger<VerificationService> _logger;
         

@@ -7,7 +7,7 @@ namespace VerifyBot.Services.Verification.Helpers
     {
         public static void AddVerification(this IServiceCollection services)
         {
-            services.AddScoped<IStorageService, VerificationService>();
+            services.AddTransient<VerificationService>();
         }
     }
 }

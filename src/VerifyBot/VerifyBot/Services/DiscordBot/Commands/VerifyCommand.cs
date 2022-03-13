@@ -1,9 +1,18 @@
+using System;
 using Discord;
+using VerifyBot.Services.Verification;
 
 namespace VerifyBot.Services.DiscordBot.Commands
 {
     public class VerifyCommand : ICommand
     {
+        private readonly VerificationService _verificationService;
+        
+        public VerifyCommand(VerificationService verificationService)
+        {
+            _verificationService = verificationService ?? throw new ArgumentNullException(nameof(verificationService));
+        }
+        
         public SlashCommandProperties Build()
         {
             return new SlashCommandBuilder()
