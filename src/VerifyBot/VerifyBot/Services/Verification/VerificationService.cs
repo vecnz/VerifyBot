@@ -20,8 +20,15 @@ namespace VerifyBot.Services.Verification
         private readonly VerificationOptions _verificationOptions;
         private readonly ILogger<VerificationService> _logger;
         private static readonly Regex CodePattern = new Regex("^\\$[A-Z0-9]+$");
-
+        
         private X509Certificate2 _publicKeyCert;
+        
+        public enum EmailResult
+        {
+            Success,
+            InvalidEmail,
+            Failure
+        }
         
         public VerificationService(
             IStorageService storageService,
@@ -34,12 +41,22 @@ namespace VerifyBot.Services.Verification
             _publicKeyCert = new X509Certificate2(_verificationOptions.PublicKeyPath);
         }
 
-        public async Task<string> Test()
+        public async Task<EmailResult> StartVerificationAsync(ulong userId, string email)
         {
-            return await CreateVerificationCodeAsync(0, "user");
+            if (!IsEmailValid(email, out string username))
+            {
+                return EmailResult.InvalidEmail;
+            }
+
+            string token = await CreateVerificationCodeAsync(userId, username);
+            // TODO: send email here
+            // Also need to check for duplicate verifications and stuff, but that might need to be done after verification succeeds?
+            // Do not want people to be able to unverify someone else if they have their username.
+            // Also dont want to leak that the username has an associated account until ownership is proven.
+            return EmailResult.Success;
         }
-        
-        private async Task<string> CreateVerificationCodeAsync(ulong discordId, string username)
+
+        private async Task<string> CreateVerificationCodeAsync(ulong userId, string username)
         {
             RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
 
@@ -53,8 +70,25 @@ namespace VerifyBot.Services.Verification
             rng.GetBytes(tokenBuffer);
             string token = "$" + Base32.ToString(tokenBuffer);
             
+            // TODO: generate duplicate detection stuff and save all of it to DB here.
             //await _storageService.AddPendingVerificationAsync(token, encryptedUsername, discordId);
             return token;
+        }
+        
+        /// <summary>
+        /// Checks if a uni username is valid
+        /// </summary>
+        public bool IsEmailValid(string email, out string username)
+        {
+            Match match = new Regex(_verificationOptions.EmailPattern).Match(email);
+            if (!match.Success)
+            {
+                username = string.Empty;
+                return false;
+            }
+
+            username = match.Groups[_verificationOptions.EmailUsernameMatchGroup].Value;
+            return true;
         }
     }
 }
