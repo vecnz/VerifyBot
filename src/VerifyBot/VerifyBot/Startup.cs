@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using VerifyBot.Services.DiscordBot.Helpers;
-using VerifyBot.Services.Storage.Helpers;
+using VerifyBot.Services.Storage.MySql.Helpers;
 
 namespace VerifyBot
 {
