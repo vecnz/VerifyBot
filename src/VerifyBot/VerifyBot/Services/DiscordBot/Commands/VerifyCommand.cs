@@ -24,7 +24,7 @@ namespace VerifyBot.Services.DiscordBot.Commands
 
         public async void Execute(ISlashCommandInteraction command)
         {
-            
+            await command.RespondAsync(await _verificationService.Test());
         }
     }
 }

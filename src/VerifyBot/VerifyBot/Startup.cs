@@ -55,7 +55,7 @@ namespace VerifyBot
             services.AddLogging(x => x.AddSerilog());
             services.AddDiscordBot(_configuration);
             services.AddMySql(_configuration);
-            services.AddVerification();
+            services.AddVerification(_configuration);
         }
     }
 }

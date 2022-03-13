@@ -34,6 +34,11 @@ namespace VerifyBot.Services.Verification
             _publicKeyCert = new X509Certificate2(_verificationOptions.PublicKeyPath);
         }
 
+        public async Task<string> Test()
+        {
+            return await CreateVerificationCodeAsync(0, "user");
+        }
+        
         private async Task<string> CreateVerificationCodeAsync(ulong discordId, string username)
         {
             RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
