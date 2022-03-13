@@ -1,9 +1,13 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using VerifyBot.Services.DiscordBot.Commands;
 using VerifyBot.Services.DiscordBot.Configuration;
 
 namespace VerifyBot.Services.DiscordBot.Helpers
@@ -22,6 +26,16 @@ namespace VerifyBot.Services.DiscordBot.Helpers
             }));
             services.AddSingleton<IHostedService, DiscordBot>(); // The IHostedService interface is convinient for this use since it has start and stop methods.
             services.AddScoped<SlashCommandHandler>();
+            
+            // Resolve commands and add them to DI 
+            var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsAbstract);
+
+            foreach (Type commandType in commandTypes)
+            {
+                services.AddScoped(typeof(ICommand), commandType);
+            }
         }
     }
 }
