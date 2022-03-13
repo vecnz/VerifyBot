@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
 
@@ -33,6 +34,15 @@ namespace VerifyBot.Services.Verification.Configuration
             if (!File.Exists(options.PublicKeyPath))
             {
                 return ValidateOptionsResult.Fail($"File not found: \"{options.PublicKeyPath}\"");
+            }
+
+            try
+            {
+                new X509Certificate2(options.PublicKeyPath);
+            }
+            catch (Exception ex)
+            {
+                return ValidateOptionsResult.Fail("Failed to load public key: " + ex.Message);
             }
             
             return ValidateOptionsResult.Success;
