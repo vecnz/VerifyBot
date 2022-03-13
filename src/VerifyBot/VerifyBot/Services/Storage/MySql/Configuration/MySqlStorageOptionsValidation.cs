@@ -32,6 +32,10 @@ namespace VerifyBot.Services.Storage.MySql.Configuration
                         return ValidateOptionsResult.Fail($"Failed to connect to MySql DB. {ex.Message}");
                 }
             }
+            catch (Exception ex)
+            {
+                return ValidateOptionsResult.Fail($"Failed to connect to MySql DB. {ex.Message}");
+            }
             finally
             {
                 if (con?.State == ConnectionState.Open) con.Close();
