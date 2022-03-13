@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VerifyBot.Services.Storage.MySql.Configuration;
 
@@ -11,7 +12,8 @@ namespace VerifyBot.Services.Storage.MySql.Helpers
         {
             services.Configure<MySqlStorageOptions>(configuration.GetSection(MySqlStorageOptions.Name));
             services.AddSingleton<IValidateOptions<MySqlStorageOptions>, MySqlStorageOptionsValidation>();
-            services.AddSingleton<IStorageService, MySqlStorageService>();
+            services.AddTransient<IStorageService, MySqlStorageService>();
+            services.AddTransient<IHostedService, MySqlStorageService>();
         }
     }
 }
