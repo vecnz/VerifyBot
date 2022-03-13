@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Extensions.Logging;
-using VerifyBot.Services.Storage;
 
 namespace VerifyBot.Services.Verification
 {

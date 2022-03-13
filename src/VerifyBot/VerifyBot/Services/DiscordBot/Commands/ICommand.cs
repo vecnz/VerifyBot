@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Discord;
 
 namespace VerifyBot.Services.DiscordBot.Commands

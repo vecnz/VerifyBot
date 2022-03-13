@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using VerifyBot.Services.Storage;
 
 namespace VerifyBot.Services.Verification.Helpers
 {
