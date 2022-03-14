@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -18,9 +17,9 @@ namespace VerifyBot.Services.Storage.MySql
 {
     public class MySqlStorageService : IStorageService
     {
-        private const string UserTable = "user";
-        private const string UsernameRecordTable = "username_record";
-        private const string PendingVerificationTable = "pending_verification";
+        public const string UserTable = "user";
+        public const string UsernameRecordTable = "username_record";
+        public const string PendingVerificationTable = "pending_verification";
 
         private static readonly SemaphoreSlim _usernameRecordLock = new SemaphoreSlim(1, 1);
         
@@ -100,7 +99,7 @@ namespace VerifyBot.Services.Storage.MySql
             try
             {
                 await con.OpenAsync();
-                //await con.ExecuteAsync($"LOCK TABLES `{UsernameRecordTable}` WRITE;");
+                await con.ExecuteAsync($"LOCK TABLES `{UsernameRecordTable}` WRITE;");
 
                 var usernameRecords = await con.GetAllAsync<UsernameRecord>();
                 
@@ -119,7 +118,7 @@ namespace VerifyBot.Services.Storage.MySql
                 _logger.LogDebug("Inserting username record...");
                 createdUsernameRecord.id = await con.InsertAsync(createdUsernameRecord);
                 
-                //await con.ExecuteAsync("UNLOCK TABLES;");
+                await con.ExecuteAsync("UNLOCK TABLES;");
                 _logger.LogDebug("Insert complete.");
                 return createdUsernameRecord;
             }

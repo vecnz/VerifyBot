@@ -2,7 +2,7 @@ using Dapper.Contrib.Extensions;
 
 namespace VerifyBot.Services.Storage.MySql.Models
 {
-    [Table("username_record")]
+    [Table(MySqlStorageService.UsernameRecordTable)]
     public class UsernameRecord
     {
         [Key]
