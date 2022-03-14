@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VerifyBot.Services.Storage;
+using VerifyBot.Services.Storage.Models;
 using VerifyBot.Services.Verification.Configuration;
 using VerifyBot.Services.Verification.Helpers;
 
@@ -48,7 +49,7 @@ namespace VerifyBot.Services.Verification
                 return EmailResult.InvalidEmail;
             }
 
-            string token = await CreateVerificationCodeAsync(userId, username);
+            string token = await CreateVerificationTokenAsync(userId, username);
             // TODO: send email here
             // Also need to check for duplicate verifications and stuff, but that might need to be done after verification succeeds?
             // Do not want people to be able to unverify someone else if they have their username.
@@ -56,22 +57,44 @@ namespace VerifyBot.Services.Verification
             return EmailResult.Success;
         }
 
-        private async Task<string> CreateVerificationCodeAsync(ulong userId, string username)
+        private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
         {
             RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
-
+            
             byte[] usernameBytes = Encoding.UTF8.GetBytes(username);
+            
+            // Encrypt username with RSA, used to allow username to be recovered.
             byte[] encryptedUsername;
             using (RSA rsa = _publicKeyCert.GetRSAPublicKey())
                 encryptedUsername = rsa.Encrypt(usernameBytes, RSAEncryptionPadding.OaepSHA256);
 
-            byte[] tokenBuffer = new byte[RandomTokenLength];
+            // Generate username hash, used for duplicate detection.
+            byte[] salt = new byte[64]; // 512 bit random salt for hash
+            rng.GetBytes(salt);
+            
+            // Combine username and salt for hashing.
+            byte[] hashInput = new byte[usernameBytes.Length + salt.Length];
+            usernameBytes.CopyTo(hashInput, 0);
+            salt.CopyTo(hashInput, usernameBytes.Length);
+            
+            // Hash username with the salt
+            byte[] hashedUsername;
+            using (SHA512 sha = SHA512.Create())
+                hashedUsername = sha.ComputeHash(hashInput);
 
+            // Generate random Base32 token for user to verify with.
+            byte[] tokenBuffer = new byte[RandomTokenLength];
             rng.GetBytes(tokenBuffer);
             string token = "$" + Base32.ToString(tokenBuffer);
             
-            // TODO: generate duplicate detection stuff and save all of it to DB here.
-            //await _storageService.AddPendingVerificationAsync(token, encryptedUsername, discordId);
+            await _storageService.AddPendingVerificationAsync(new PendingVerification()
+            {
+                UserId = userId,
+                Token = token,
+                EncryptedUsername = encryptedUsername,
+                UsernameSalt = salt,
+                UsernameHash = hashedUsername
+            });
             return token;
         }
         
