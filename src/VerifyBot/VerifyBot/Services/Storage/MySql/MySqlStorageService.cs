@@ -107,7 +107,7 @@ namespace VerifyBot.Services.Storage.MySql
                 // Search for existing username records.
                 foreach (var usernameRecord in usernameRecords)
                 {
-                    if (await isUsernameMatchAsync(usernameRecord, username))
+                    if (isUsernameMatchAsync(usernameRecord, username))
                     {
                         _logger.LogDebug("Match found: {id}", usernameRecord.id);
                         return usernameRecord;
@@ -115,7 +115,7 @@ namespace VerifyBot.Services.Storage.MySql
                 }
                 
                 _logger.LogDebug("No existing username found. Creating new record...");
-                var createdUsernameRecord = await encryptUsernameAsync(username);
+                var createdUsernameRecord = encryptUsernameAsync(username);
                 _logger.LogDebug("Inserting username record...");
                 createdUsernameRecord.id = await con.InsertAsync(createdUsernameRecord);
                 
@@ -130,7 +130,13 @@ namespace VerifyBot.Services.Storage.MySql
             }
         }
 
-        private async Task<bool> isUsernameMatchAsync(UsernameRecord usernameRecord, string username)
+        /// <summary>
+        /// Checks if a hashed username record database matches the specified username.
+        /// </summary>
+        /// <param name="usernameRecord">Encrypted and hashed username data record.</param>
+        /// <param name="username">Plain text username.</param>
+        /// <returns>True if username is a match, false if it's not.</returns>
+        private bool isUsernameMatchAsync(UsernameRecord usernameRecord, string username)
         {
             byte[] usernameBytes = Encoding.UTF8.GetBytes(username);
             
@@ -145,10 +151,16 @@ namespace VerifyBot.Services.Storage.MySql
             using (SHA512 sha = SHA512.Create())
                 hash = sha.ComputeHash(hashInput);
 
-            return Enumerable.SequenceEqual(usernameRecord.username_hash, hash);
+            return usernameRecord.username_hash.SequenceEqual(hash);
         }
         
-        private async Task<UsernameRecord> encryptUsernameAsync(string username)
+        /// <summary>
+        /// Encrypts the username using RSA for reversable encryption and also hashes the
+        /// username to use for duplicate detection.
+        /// </summary>
+        /// <param name="username">username to encrypt and hash.</param>
+        /// <returns>Encrypted/hashed result to be put into the database.</returns>
+        private UsernameRecord encryptUsernameAsync(string username)
         {
             // Generate new username record.
             RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
