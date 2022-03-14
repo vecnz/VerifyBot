@@ -1,5 +1,7 @@
 using System;
 using System.Data;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
@@ -9,6 +11,7 @@ namespace VerifyBot.Services.Storage.MySql.Configuration
     {
         public ValidateOptionsResult Validate(string name, MySqlStorageOptions options)
         {
+            // Validate MySql connection string.
             MySqlConnection con = null;
             try
             {
@@ -41,6 +44,37 @@ namespace VerifyBot.Services.Storage.MySql.Configuration
                 if (con?.State == ConnectionState.Open) con.Close();
             }
 
+            // Validate username public key path.
+            if (string.IsNullOrWhiteSpace(options.UsernamePublicKeyPath))
+            {
+                return ValidateOptionsResult.Fail("Missing username public key path.");
+            }
+            
+            if (!File.Exists(options.UsernamePublicKeyPath))
+            {
+                return ValidateOptionsResult.Fail($"File not found: \"{options.UsernamePublicKeyPath}\"");
+            }
+
+            try
+            {
+                new X509Certificate2(options.UsernamePublicKeyPath);
+            }
+            catch (Exception ex)
+            {
+                return ValidateOptionsResult.Fail("Failed to load username public key: " + ex.Message);
+            }
+            
+            // Validate username hash pepper
+            if (string.IsNullOrWhiteSpace(options.UsernameHashPepperB64))
+            {
+                return ValidateOptionsResult.Fail("Missing username hash pepper.");
+            }
+            
+            if(!Convert.TryFromBase64String(options.UsernameHashPepperB64, new byte[128], out _))
+            {
+                return ValidateOptionsResult.Fail("Invalid Base64 username hash pepper.");
+            }
+            
             return ValidateOptionsResult.Success;
         }
     }

@@ -1,13 +1,10 @@
 using System;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VerifyBot.Services.Storage;
-using VerifyBot.Services.Storage.Models;
 using VerifyBot.Services.Verification.Configuration;
 using VerifyBot.Services.Verification.Helpers;
 
@@ -21,9 +18,7 @@ namespace VerifyBot.Services.Verification
         private readonly VerificationOptions _verificationOptions;
         private readonly ILogger<VerificationService> _logger;
         private static readonly Regex CodePattern = new Regex("^\\$[A-Z0-9]+$");
-        
-        private X509Certificate2 _publicKeyCert;
-        
+
         public enum EmailResult
         {
             Success,
@@ -39,7 +34,6 @@ namespace VerifyBot.Services.Verification
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
             _verificationOptions = verificationOptions?.Value ?? throw new ArgumentNullException(nameof(verificationOptions));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _publicKeyCert = new X509Certificate2(_verificationOptions.PublicKeyPath);
         }
 
         public async Task<EmailResult> StartVerificationAsync(ulong userId, string email)
@@ -59,42 +53,13 @@ namespace VerifyBot.Services.Verification
 
         private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
         {
-            RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
-            
-            byte[] usernameBytes = Encoding.UTF8.GetBytes(username);
-            
-            // Encrypt username with RSA, used to allow username to be recovered.
-            byte[] encryptedUsername;
-            using (RSA rsa = _publicKeyCert.GetRSAPublicKey())
-                encryptedUsername = rsa.Encrypt(usernameBytes, RSAEncryptionPadding.OaepSHA256);
-
-            // Generate username hash, used for duplicate detection.
-            byte[] salt = new byte[64]; // 512 bit random salt for hash
-            rng.GetBytes(salt);
-            
-            // Combine username and salt for hashing.
-            byte[] hashInput = new byte[usernameBytes.Length + salt.Length];
-            usernameBytes.CopyTo(hashInput, 0);
-            salt.CopyTo(hashInput, usernameBytes.Length);
-            
-            // Hash username with the salt
-            byte[] hashedUsername;
-            using (SHA512 sha = SHA512.Create())
-                hashedUsername = sha.ComputeHash(hashInput);
-
             // Generate random Base32 token for user to verify with.
             byte[] tokenBuffer = new byte[RandomTokenLength];
-            rng.GetBytes(tokenBuffer);
+            new RNGCryptoServiceProvider().GetBytes(tokenBuffer);
             string token = "$" + Base32.ToString(tokenBuffer);
+
+            await _storageService.AddPendingVerificationAsync(username);
             
-            await _storageService.AddPendingVerificationAsync(new PendingVerification()
-            {
-                UserId = userId,
-                Token = token,
-                EncryptedUsername = encryptedUsername,
-                UsernameSalt = salt,
-                UsernameHash = hashedUsername
-            });
             return token;
         }
         
@@ -103,14 +68,14 @@ namespace VerifyBot.Services.Verification
         /// </summary>
         public bool IsEmailValid(string email, out string username)
         {
-            Match match = new Regex(_verificationOptions.EmailPattern).Match(email);
+            Match match = new Regex(_verificationOptions.EmailPattern, RegexOptions.IgnoreCase).Match(email);
             if (!match.Success)
             {
                 username = string.Empty;
                 return false;
             }
 
-            username = match.Groups[_verificationOptions.EmailUsernameMatchGroup].Value;
+            username = match.Groups[_verificationOptions.EmailUsernameMatchGroup].Value.ToLower();
             return true;
         }
     }

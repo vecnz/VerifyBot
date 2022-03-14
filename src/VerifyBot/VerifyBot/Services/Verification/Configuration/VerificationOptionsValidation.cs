@@ -25,26 +25,6 @@ namespace VerifyBot.Services.Verification.Configuration
                 return ValidateOptionsResult.Fail("Invalid email RegEx pattern.");
             }
 
-            // Validate public key path.
-            if (string.IsNullOrWhiteSpace(options.PublicKeyPath))
-            {
-                return ValidateOptionsResult.Fail("Missing public key path.");
-            }
-            
-            if (!File.Exists(options.PublicKeyPath))
-            {
-                return ValidateOptionsResult.Fail($"File not found: \"{options.PublicKeyPath}\"");
-            }
-
-            try
-            {
-                new X509Certificate2(options.PublicKeyPath);
-            }
-            catch (Exception ex)
-            {
-                return ValidateOptionsResult.Fail("Failed to load public key: " + ex.Message);
-            }
-            
             return ValidateOptionsResult.Success;
         }
     }

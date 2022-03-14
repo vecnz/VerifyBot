@@ -6,6 +6,5 @@ namespace VerifyBot.Services.Verification.Configuration
 
         public string EmailPattern { get; set; } = string.Empty;
         public int EmailUsernameMatchGroup { get; set; } = 0;
-        public string PublicKeyPath { get; set; } = string.Empty;
     }
 }
