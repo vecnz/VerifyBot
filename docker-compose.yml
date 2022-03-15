@@ -1,13 +1,21 @@
 version: "3"
 
 services:
+  db:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql
+
   bot:
     build: .
     env_file:
       - .env
     restart: always
-    volumes:
-      - storage:/app/VerifyBot.pdb
+    depends_on:
+      - db
 
 volumes:
   storage:
