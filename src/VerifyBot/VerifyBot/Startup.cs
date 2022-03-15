@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using VerifyBot.Services.DiscordBot.Helpers;
+using VerifyBot.Services.Email.Smtp.Helpers;
 using VerifyBot.Services.Storage.MySql.Helpers;
 using VerifyBot.Services.Verification.Helpers;
 
@@ -55,6 +56,7 @@ namespace VerifyBot
             services.AddLogging(x => x.AddSerilog());
             services.AddDiscordBot(_configuration);
             services.AddMySql(_configuration);
+            services.AddSmtpEmail(_configuration);
             services.AddVerification(_configuration);
         }
     }
