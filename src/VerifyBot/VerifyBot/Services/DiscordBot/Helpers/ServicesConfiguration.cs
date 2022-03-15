@@ -20,6 +20,7 @@ namespace VerifyBot.Services.DiscordBot.Helpers
             services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose, // Tell the logger to give Verbose amount of info
+                GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.AllUnprivileged,
                 AlwaysDownloadUsers = true,
                 DefaultRetryMode = RetryMode.AlwaysFail
             }));
