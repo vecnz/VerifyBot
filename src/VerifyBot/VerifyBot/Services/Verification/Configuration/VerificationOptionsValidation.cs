@@ -25,6 +25,18 @@ namespace VerifyBot.Services.Verification.Configuration
                 return ValidateOptionsResult.Fail("Invalid email RegEx pattern.");
             }
 
+            // Validate regex match group for username
+            if (options.EmailUsernameMatchGroup < 0)
+            {
+                return ValidateOptionsResult.Fail("Email username match group cannot be less than 0.");
+            }
+            
+            // Validate token expiry time
+            if (TimeSpan.Zero.Equals(options.VerificationTokenExpiry))
+            {
+                return ValidateOptionsResult.Fail("Verification token expiry cannot be zero.");
+            }
+            
             return ValidateOptionsResult.Success;
         }
     }
