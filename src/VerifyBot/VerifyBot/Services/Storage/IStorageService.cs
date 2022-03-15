@@ -4,6 +4,6 @@ namespace VerifyBot.Services.Storage
 {
     public interface IStorageService
     {
-        Task AddPendingVerificationAsync(string username);
+        Task AddPendingVerificationAsync(ulong userId, string token, string username);
     }
 }

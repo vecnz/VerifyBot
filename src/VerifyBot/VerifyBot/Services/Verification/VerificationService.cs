@@ -58,7 +58,7 @@ namespace VerifyBot.Services.Verification
             new RNGCryptoServiceProvider().GetBytes(tokenBuffer);
             string token = "$" + Base32.ToString(tokenBuffer);
 
-            await _storageService.AddPendingVerificationAsync(username);
+            await _storageService.AddPendingVerificationAsync(userId, token, username);
             
             return token;
         }

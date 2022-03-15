@@ -38,31 +38,21 @@ namespace VerifyBot.Services.Storage.MySql
             _usernameHashPepper = Convert.FromBase64String(_mySqlStorageOptions.UsernameHashPepperB64);
         }
 
-        public async Task AddPendingVerificationAsync(string username)
+        public async Task AddPendingVerificationAsync(ulong userId, string token, string username)
         {
-            var result = await getAndSetUsernameRecord(username);
+            var usernameRecord = await getAndSetUsernameRecord(username);
+            await createUserIfNotExistAsync(userId);
             
-            Console.WriteLine("test");
-            // await createUserIfNotExistAsync(pendingVerification.UserId);
-            //
-            // using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
-            // await con.OpenAsync();
-            // using var transaction = await con.BeginTransactionAsync();
-            //
-            // await con.ExecuteAsync(
-            //     $@"INSERT INTO `{PendingVerificationTable}`
-            //             (`user_id`, `username_record_id`, `token`, `creation_time`)
-            //             VALUES (@userId, @usernameId, @token, @time);
-            //             SELECT LAST_INSERT_ID();",
-            //     new
-            //     {
-            //         userId = pendingVerification.UserId,
-            //         usernameId = usernameRecordId,
-            //         token = pendingVerification.Token,
-            //         time = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            //     });
-            //
-            // transaction.Commit();
+            
+            using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            await con.InsertAsync(new PendingVerification()
+            {
+                user_id = userId,
+                username_record_id = usernameRecord.id,
+                token = token,
+                creation_time =  DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            });
         }
 
         private async Task createUserIfNotExistAsync(ulong userId)
@@ -99,7 +89,7 @@ namespace VerifyBot.Services.Storage.MySql
             try
             {
                 await con.OpenAsync();
-                await con.ExecuteAsync($"LOCK TABLES `{UsernameRecordTable}` WRITE;");
+                //await con.ExecuteAsync($"LOCK TABLES `{UsernameRecordTable}` WRITE;");
 
                 var usernameRecords = await con.GetAllAsync<UsernameRecord>();
                 
@@ -118,7 +108,7 @@ namespace VerifyBot.Services.Storage.MySql
                 _logger.LogDebug("Inserting username record...");
                 createdUsernameRecord.id = await con.InsertAsync(createdUsernameRecord);
                 
-                await con.ExecuteAsync("UNLOCK TABLES;");
+                //await con.ExecuteAsync("UNLOCK TABLES;");
                 _logger.LogDebug("Insert complete.");
                 return createdUsernameRecord;
             }
