@@ -81,6 +81,13 @@ namespace VerifyBot.Services.Storage.MySql
                     usernameRecordId
                 });
         }
+
+        public async Task<User> GetUser(ulong userId)
+        {
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            return await con.GetAsync<User>(userId);
+        }
         
         private async Task createUserIfNotExistAsync(ulong userId)
         {

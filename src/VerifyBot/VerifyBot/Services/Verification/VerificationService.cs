@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -22,6 +23,9 @@ namespace VerifyBot.Services.Verification
         private readonly ILogger<VerificationService> _logger;
         private static readonly Regex TokenPattern = new Regex("^\\$[A-Z0-9]+$");
 
+        public delegate void VerificationChangedEventHandler(VerificationService sender, ulong userId, bool verified);
+        public event VerificationChangedEventHandler VerificationChanged;
+        
         public enum StartVerificationResult
         {
             Success,
@@ -90,7 +94,7 @@ namespace VerifyBot.Services.Verification
                 }
 
                 await _storageService.SetUserVerifiedUsernameId(userId, pendingVerification.username_record_id);
-
+                VerificationChanged?.Invoke(this, userId, true);
                 return FinishVerificationResult.Success;
             }
             catch (Exception ex)
@@ -123,7 +127,7 @@ namespace VerifyBot.Services.Verification
         }
 
         /// <summary>
-        /// Checks if a uni username is valid
+        /// Checks if a uni username is valid.
         /// </summary>
         public bool IsEmailValid(string email, out string username)
         {
@@ -136,6 +140,12 @@ namespace VerifyBot.Services.Verification
 
             username = match.Groups[_verificationOptions.EmailUsernameMatchGroup].Value.ToLower();
             return true;
+        }
+        
+        public async Task<bool> IsUserVerifiedAsync(ulong userId)
+        {
+            var user = await _storageService.GetUser(userId);
+            return user.username_record_id != null;
         }
     }
 }
