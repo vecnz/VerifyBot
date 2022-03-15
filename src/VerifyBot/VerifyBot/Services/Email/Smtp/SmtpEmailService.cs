@@ -18,7 +18,7 @@ namespace VerifyBot.Services.Email.Smtp
             _smtpOptions = smtpOptions?.Value ?? throw new ArgumentNullException(nameof(smtpOptions));
         }
         
-        public async Task SendVerificationEmail(string address, string token)
+        public async Task SendVerificationEmailAsync(string address, string token)
         {
             using SmtpClient client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port);
             client.EnableSsl = _smtpOptions.UseSsl;

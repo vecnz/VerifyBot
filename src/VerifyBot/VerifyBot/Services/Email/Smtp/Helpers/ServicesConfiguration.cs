@@ -11,7 +11,7 @@ namespace VerifyBot.Services.Email.Smtp.Helpers
         {
             services.Configure<SmtpEmailOptions>(configuration.GetSection(SmtpEmailOptions.Name));
             services.AddSingleton<IValidateOptions<SmtpEmailOptions>, SmtpEmailOptionsValidation>();
-            services.AddScoped<IEmailService, SmtpEmailService>();
+            services.AddTransient<IEmailService, SmtpEmailService>();
         }
     }
 }

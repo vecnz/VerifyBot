@@ -4,6 +4,6 @@ namespace VerifyBot.Services.Email
 {
     public interface IEmailService
     {
-        public Task SendVerificationEmail(string address, string token);
+        public Task SendVerificationEmailAsync(string address, string token);
     }
 }

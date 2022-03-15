@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VerifyBot.Services.Email;
 using VerifyBot.Services.Storage.MySql;
 using VerifyBot.Services.Storage.MySql.TableModels;
 using VerifyBot.Services.Verification.Configuration;
@@ -15,8 +16,9 @@ namespace VerifyBot.Services.Verification
     {
         private const int RandomTokenLength = 5; // Length in bytes. Base32 encodes 5 bytes into 8 characters.
 
-        private readonly MySqlStorageService _storageService;
         private readonly VerificationOptions _verificationOptions;
+        private readonly MySqlStorageService _storageService;
+        private readonly IEmailService _emailService;
         private readonly ILogger<VerificationService> _logger;
         private static readonly Regex TokenPattern = new Regex("^\\$[A-Z0-9]+$");
 
@@ -37,13 +39,14 @@ namespace VerifyBot.Services.Verification
         }
 
         public VerificationService(
-            MySqlStorageService storageService,
             IOptions<VerificationOptions> verificationOptions,
+            MySqlStorageService storageService,
+            IEmailService emailService,
             ILogger<VerificationService> logger)
         {
+            _verificationOptions = verificationOptions?.Value ?? throw new ArgumentNullException(nameof(verificationOptions));
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-            _verificationOptions = verificationOptions?.Value ??
-                                   throw new ArgumentNullException(nameof(verificationOptions));
+            _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -57,10 +60,8 @@ namespace VerifyBot.Services.Verification
                 }
 
                 string token = await CreateVerificationTokenAsync(userId, username);
-                // TODO: send email here
-                // Also need to check for duplicate verifications and stuff, but that might need to be done after verification succeeds?
-                // Do not want people to be able to unverify someone else if they have their username.
-                // Also dont want to leak that the username has an associated account until ownership is proven.
+                await _emailService.SendVerificationEmailAsync(email, token);
+                
                 return StartVerificationResult.Success;
             }
             catch (Exception ex)
