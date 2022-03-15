@@ -17,40 +17,83 @@ namespace VerifyBot.Services.Verification
         private readonly IStorageService _storageService;
         private readonly VerificationOptions _verificationOptions;
         private readonly ILogger<VerificationService> _logger;
-        private static readonly Regex CodePattern = new Regex("^\\$[A-Z0-9]+$");
+        private static readonly Regex TokenPattern = new Regex("^\\$[A-Z0-9]+$");
 
-        public enum EmailResult
+        public enum StartVerificationResult
         {
             Success,
+            AlreadyVerified,
             InvalidEmail,
             Failure
         }
-        
+
+        public enum FinishVerificationResult
+        {
+            Success,
+            InvalidToken,
+            TokenExpired,
+            Failure
+        }
+
         public VerificationService(
             IStorageService storageService,
             IOptions<VerificationOptions> verificationOptions,
             ILogger<VerificationService> logger)
         {
             _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-            _verificationOptions = verificationOptions?.Value ?? throw new ArgumentNullException(nameof(verificationOptions));
+            _verificationOptions = verificationOptions?.Value ??
+                                   throw new ArgumentNullException(nameof(verificationOptions));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<EmailResult> StartVerificationAsync(ulong userId, string email)
+        public async Task<StartVerificationResult> StartVerificationAsync(ulong userId, string email)
         {
-            if (!IsEmailValid(email, out string username))
+            try
             {
-                return EmailResult.InvalidEmail;
-            }
+                if (!IsEmailValid(email, out string username))
+                {
+                    return StartVerificationResult.InvalidEmail;
+                }
 
-            string token = await CreateVerificationTokenAsync(userId, username);
-            // TODO: send email here
-            // Also need to check for duplicate verifications and stuff, but that might need to be done after verification succeeds?
-            // Do not want people to be able to unverify someone else if they have their username.
-            // Also dont want to leak that the username has an associated account until ownership is proven.
-            return EmailResult.Success;
+                string token = await CreateVerificationTokenAsync(userId, username);
+                // TODO: send email here
+                // Also need to check for duplicate verifications and stuff, but that might need to be done after verification succeeds?
+                // Do not want people to be able to unverify someone else if they have their username.
+                // Also dont want to leak that the username has an associated account until ownership is proven.
+                return StartVerificationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to start verification. User ID {user}. Message {message}", userId, ex.Message,
+                    ex);
+                return StartVerificationResult.Failure;
+            }
         }
 
+        public async Task<FinishVerificationResult> FinishVerificationAsync(ulong userId, string token)
+        {
+            try
+            {
+                _logger.LogDebug("Finish verification called.");
+                return FinishVerificationResult.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to finish verification. User ID {user}. Message {message}", userId, ex.Message, ex);
+                return FinishVerificationResult.Failure;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified string is the correct format to be a verification token.
+        /// </summary>
+        /// <param name="token">The token string to check.</param>
+        /// <returns>True if the string is in the token format.</returns>
+        public static bool IsVerificationToken(string token)
+        {
+            return TokenPattern.IsMatch(token.ToUpper());
+        }
+        
         private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
         {
             // Generate random Base32 token for user to verify with.
@@ -59,10 +102,10 @@ namespace VerifyBot.Services.Verification
             string token = "$" + Base32.ToString(tokenBuffer);
 
             await _storageService.AddPendingVerificationAsync(userId, token, username);
-            
+
             return token;
         }
-        
+
         /// <summary>
         /// Checks if a uni username is valid
         /// </summary>
