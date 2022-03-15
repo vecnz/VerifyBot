@@ -1,6 +1,6 @@
 using Dapper.Contrib.Extensions;
 
-namespace VerifyBot.Services.Storage.MySql.Models
+namespace VerifyBot.Services.Storage.MySql.TableModels
 {
     [Table(MySqlStorageService.PendingVerificationTable)]
     public class PendingVerification
