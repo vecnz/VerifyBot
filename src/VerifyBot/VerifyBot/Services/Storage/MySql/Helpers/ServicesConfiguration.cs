@@ -11,7 +11,7 @@ namespace VerifyBot.Services.Storage.MySql.Helpers
         {
             services.Configure<MySqlStorageOptions>(configuration.GetSection(MySqlStorageOptions.Name));
             services.AddSingleton<IValidateOptions<MySqlStorageOptions>, MySqlStorageOptionsValidation>();
-            services.AddScoped<IStorageService, MySqlStorageService>();
+            services.AddScoped<MySqlStorageService>();
         }
     }
 }
