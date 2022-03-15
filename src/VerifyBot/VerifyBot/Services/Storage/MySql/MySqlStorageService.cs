@@ -11,11 +11,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using VerifyBot.Services.Storage.MySql.Configuration;
-using VerifyBot.Services.Storage.MySql.Models;
+using VerifyBot.Services.Storage.MySql.TableModels;
 
 namespace VerifyBot.Services.Storage.MySql
 {
-    public class MySqlStorageService : IStorageService
+    public class MySqlStorageService
     {
         public const string UserTable = "user";
         public const string UsernameRecordTable = "username_record";
@@ -44,7 +44,7 @@ namespace VerifyBot.Services.Storage.MySql
             await createUserIfNotExistAsync(userId);
             
             
-            using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.InsertAsync(new PendingVerification()
             {
@@ -55,9 +55,36 @@ namespace VerifyBot.Services.Storage.MySql
             });
         }
 
+        public async Task<PendingVerification> GetPendingVerificationAsync(ulong userId, string token)
+        {
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+
+            return await con.QuerySingleOrDefaultAsync<PendingVerification>(
+                $@"SELECT * FROM `{PendingVerificationTable}` WHERE `user_id` = @userId AND `token` = @token",
+                new
+                {
+                    userId,
+                    token
+                });
+        }
+        
+        public async Task SetUserVerifiedUsernameId(ulong userId, int? usernameRecordId)
+        {
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            await con.ExecuteAsync(
+                $@"UPDATE `{UserTable}` SET `username_record_id` = @usernameRecordId WHERE `id` = @userId;",
+                new
+                {
+                    userId,
+                    usernameRecordId
+                });
+        }
+        
         private async Task createUserIfNotExistAsync(ulong userId)
         {
-            using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.ExecuteAsync(
                 $@"INSERT IGNORE INTO `{UserTable}` 
@@ -85,7 +112,7 @@ namespace VerifyBot.Services.Storage.MySql
             _logger.LogDebug("Waiting for username record lock...");
             await _usernameRecordLock.WaitAsync();
             _logger.LogDebug("Lock aquired.");
-            using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             try
             {
                 await con.OpenAsync();
@@ -137,8 +164,8 @@ namespace VerifyBot.Services.Storage.MySql
 
             // Hash username with the salt
             byte[] hash;
-            using (SHA512 sha = SHA512.Create())
-                hash = sha.ComputeHash(hashInput);
+            using SHA512 sha = SHA512.Create();
+            hash = sha.ComputeHash(hashInput);
 
             return usernameRecord.username_hash.SequenceEqual(hash);
         }

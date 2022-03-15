@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using VerifyBot.Services.Storage;
+using VerifyBot.Services.Storage.MySql;
+using VerifyBot.Services.Storage.MySql.TableModels;
 using VerifyBot.Services.Verification.Configuration;
 using VerifyBot.Services.Verification.Helpers;
 
@@ -14,7 +15,7 @@ namespace VerifyBot.Services.Verification
     {
         private const int RandomTokenLength = 5; // Length in bytes. Base32 encodes 5 bytes into 8 characters.
 
-        private readonly IStorageService _storageService;
+        private readonly MySqlStorageService _storageService;
         private readonly VerificationOptions _verificationOptions;
         private readonly ILogger<VerificationService> _logger;
         private static readonly Regex TokenPattern = new Regex("^\\$[A-Z0-9]+$");
@@ -36,7 +37,7 @@ namespace VerifyBot.Services.Verification
         }
 
         public VerificationService(
-            IStorageService storageService,
+            MySqlStorageService storageService,
             IOptions<VerificationOptions> verificationOptions,
             ILogger<VerificationService> logger)
         {
@@ -74,7 +75,21 @@ namespace VerifyBot.Services.Verification
         {
             try
             {
-                _logger.LogDebug("Finish verification called.");
+                _logger.LogInformation("Finish verification called.");
+                PendingVerification pendingVerification = await _storageService.GetPendingVerificationAsync(userId, token);
+                if (pendingVerification == null)
+                {
+                    return FinishVerificationResult.InvalidToken;
+                }
+
+                if (DateTimeOffset.FromUnixTimeSeconds(pendingVerification.creation_time) <
+                    DateTimeOffset.UtcNow - _verificationOptions.VerificationTokenExpiry)
+                {
+                    return FinishVerificationResult.TokenExpired;
+                }
+
+                await _storageService.SetUserVerifiedUsernameId(userId, pendingVerification.username_record_id);
+
                 return FinishVerificationResult.Success;
             }
             catch (Exception ex)
