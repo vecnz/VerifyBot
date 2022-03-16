@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using VerifyBot.Services.DiscordBot.Commands;
+using VerifyBot.Services.Translation;
 
 namespace VerifyBot.Services.DiscordBot
 {
@@ -14,16 +15,19 @@ namespace VerifyBot.Services.DiscordBot
     {
         private readonly DiscordSocketClient _discordClient;
         private readonly ILogger<SlashCommandHandler> _logger;
+        private readonly ITranslator _translator;
         private readonly IEnumerable<ICommand> _commands;
         private readonly Dictionary<ulong, ICommand> _registeredCommands = new Dictionary<ulong, ICommand>(); // I am aware that this is still mutable.
         
         public SlashCommandHandler(
             DiscordSocketClient discordClient,
             ILogger<SlashCommandHandler> logger,
+            ITranslator translator,
             IEnumerable<ICommand> commands)
         {
             _discordClient = discordClient ?? throw new ArgumentNullException(nameof(discordClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _translator = translator ?? throw new ArgumentNullException(nameof(translator));
             _commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
@@ -94,7 +98,7 @@ namespace VerifyBot.Services.DiscordBot
             {
                 _logger.LogError(ex, "Exception thrown while running slash command {command}. Message: {message}", command.Data.Name, ex.Message);
                 _logger.LogTrace("Sending server fail message in response to failed command.");
-                await command.RespondAsync("SERVER FAILURE TODO: translate this");
+                await command.RespondAsync(_translator.T("SERVER_ERROR"));
             }
         }
     }
