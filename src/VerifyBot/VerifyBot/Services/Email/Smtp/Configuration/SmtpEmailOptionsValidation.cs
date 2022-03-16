@@ -20,7 +20,20 @@ namespace VerifyBot.Services.Email.Smtp.Configuration
             {
                 return ValidateOptionsResult.Fail("SMTP port cannot be negative.");
             }
-        
+
+            if (options.UseAuthentication)
+            {
+                if (string.IsNullOrWhiteSpace(options.Username))
+                {
+                    return ValidateOptionsResult.Fail("Username must not be empty when authentication is enabled.");
+                }
+
+                if (string.IsNullOrWhiteSpace(options.Password))
+                {
+                    return ValidateOptionsResult.Fail("Password must not be empty when authentication is enabled.");
+                }
+            }
+            
             if (string.IsNullOrWhiteSpace(options.FromAddress))
             {
                 return ValidateOptionsResult.Fail("Missing SMTP from address.");
