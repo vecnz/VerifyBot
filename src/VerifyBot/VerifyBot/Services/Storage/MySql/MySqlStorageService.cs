@@ -95,7 +95,7 @@ namespace VerifyBot.Services.Storage.MySql
             await con.OpenAsync();
 
             await con.ExecuteAsync(
-                $@"DELETE FROM `{PendingVerificationTable}` WHERE `creation_time` = @time",
+                $@"DELETE FROM `{PendingVerificationTable}` WHERE `creation_time` < @time",
                 new
                 {
                     time,
