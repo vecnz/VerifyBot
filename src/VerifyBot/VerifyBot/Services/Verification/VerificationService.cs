@@ -37,6 +37,7 @@ namespace VerifyBot.Services.Verification
         public enum FinishVerificationResult
         {
             Success,
+            AlreadyVerified,
             InvalidToken,
             TokenExpired,
             Failure
@@ -59,6 +60,12 @@ namespace VerifyBot.Services.Verification
             try
             {
                 _logger.LogInformation($"Start verification called by user ID {userId}", userId);
+                if (await IsUserVerifiedAsync(userId))
+                {
+                    _logger.LogDebug($"User is already verified user ID {userId}", userId);
+                    return StartVerificationResult.AlreadyVerified;
+                }
+                
                 if (!IsEmailValid(email, out string username))
                 {
                     _logger.LogDebug($"Invalid verification email supplied by user ID {userId}", userId);
@@ -87,6 +94,12 @@ namespace VerifyBot.Services.Verification
             try
             {
                 _logger.LogInformation($"Finish verification called by user ID {userId}", userId);
+                if (await IsUserVerifiedAsync(userId))
+                {
+                    _logger.LogDebug($"User is already verified user ID {userId}", userId);
+                    return FinishVerificationResult.AlreadyVerified;
+                }
+                
                 PendingVerification pendingVerification = await _storageService.GetPendingVerificationAsync(userId, token);
                 if (pendingVerification == null)
                 {

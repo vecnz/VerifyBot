@@ -51,6 +51,9 @@ namespace VerifyBot.Services.DiscordBot.Commands
                     case VerificationService.FinishVerificationResult.TokenExpired:
                         await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_EXPIRED_TOKEN"), ephemeral: true);
                         break;
+                    case VerificationService.FinishVerificationResult.AlreadyVerified:
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_ALREADY_VERIFIED"), ephemeral: true);
+                        break;
                     case VerificationService.FinishVerificationResult.Success:
                         await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_SUCCESS"), ephemeral: true);
                         break;

@@ -21,6 +21,7 @@ namespace VerifyBot.Services.Translation
             { "VERIFY_COMMAND_FINISH_FAIL", ":fire:\tThere was an error while attempting to verify you."},
             { "VERIFY_COMMAND_FINISH_INVALID_TOKEN", ":warning:\tThe verification token you supplied is invalid."},
             { "VERIFY_COMMAND_FINISH_EXPIRED_TOKEN", ":warning:\tThe verification token you supplied is expired."},
+            { "VERIFY_COMMAND_FINISH_ALREADY_VERIFIED", ":warning:\tYou are already verified."},
             { "VERIFY_COMMAND_FINISH_SUCCESS", ":white_check_mark:\tSuccess! You are now verified."},
             
         };
