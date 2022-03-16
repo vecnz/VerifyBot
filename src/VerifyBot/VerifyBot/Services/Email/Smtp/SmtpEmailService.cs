@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,10 @@ namespace VerifyBot.Services.Email.Smtp
         {
             using SmtpClient client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port);
             client.EnableSsl = _smtpOptions.UseSsl;
+            if (_smtpOptions.UseAuthentication)
+            {
+                client.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
+            }
 
             // To and from addresses
             MailAddress from = new MailAddress(_smtpOptions.FromAddress, _smtpOptions.FromName, Encoding.UTF8);
