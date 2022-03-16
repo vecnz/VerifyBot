@@ -7,16 +7,18 @@ services:
     env_file:
       - .env
     volumes:
-      - db:/var/lib/mysql
+      - db_storage:/var/lib/mysql
+      - ./src/VerifyBot/VerifyBot/DBSchema/verifyBot.sql:/docker-entrypoint-initdb.d/verifyBot.sql
 
   bot:
     build: .
     env_file:
       - .env
-    restart: always
     depends_on:
       - db
+    volumes:
+      - ./public.pem:/app/public.pem
 
 volumes:
-  storage:
+  db_storage:
 
