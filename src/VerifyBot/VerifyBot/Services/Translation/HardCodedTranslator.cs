@@ -17,7 +17,7 @@ namespace VerifyBot.Services.Translation
             { "VERIFY_COMMAND_START_FAIL", ":fire:\tThere was an error while attempting to verify you."},
             { "VERIFY_COMMAND_START_INVALID_EMAIL", ":warning:\tThe email address you supplied is invalid or not allowed for verification."},
             { "VERIFY_COMMAND_START_ALREADY_VERIFIED", ":warning:\tYou are already verified."},
-            { "VERIFY_COMMAND_START_SUCCESS", "::white_check_mark:\tSuccess! An email with further instructions should arrive in your inbox shortly."},
+            { "VERIFY_COMMAND_START_SUCCESS", ":white_check_mark:\tSuccess! An email with further instructions should arrive in your inbox shortly."},
             { "VERIFY_COMMAND_FINISH_FAIL", ":fire:\tThere was an error while attempting to verify you."},
             { "VERIFY_COMMAND_FINISH_INVALID_TOKEN", ":warning:\tThe verification token you supplied is invalid."},
             { "VERIFY_COMMAND_FINISH_EXPIRED_TOKEN", ":warning:\tThe verification token you supplied is expired."},
