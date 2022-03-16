@@ -41,7 +41,7 @@ namespace VerifyBot.Services.Storage.MySql
 
         public async Task AddPendingVerificationAsync(ulong userId, string token, string username)
         {
-            _logger.LogDebug($"Adding pending verification to MySql database for user ID {userId}", userId);
+            _logger.LogDebug("Adding pending verification to MySql database for user ID {userId}", userId);
             _logger.LogTrace($"Getting username record from MySql database");
             var usernameRecord = await getAndSetUsernameRecord(username);
             _logger.LogTrace($"Creating user record in DB if nonexistent.");
@@ -56,11 +56,12 @@ namespace VerifyBot.Services.Storage.MySql
                 token = token,
                 creation_time =  DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
-            _logger.LogDebug($"Pending verification added to MySql database for user ID {userId}", userId);
+            _logger.LogDebug("Pending verification added to MySql database for user ID {userId}", userId);
         }
 
         public async Task<PendingVerification> GetPendingVerificationAsync(ulong userId, string token)
         {
+            _logger.LogTrace("Getting pending verification for user ID {userId}", userId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
 
@@ -75,6 +76,7 @@ namespace VerifyBot.Services.Storage.MySql
         
         public async Task SetUserVerifiedUsernameId(ulong userId, int? usernameRecordId)
         {
+            _logger.LogTrace("Setting verified username for user ID {userId}", userId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.ExecuteAsync(
@@ -88,6 +90,7 @@ namespace VerifyBot.Services.Storage.MySql
 
         public async Task<User> GetUserAsync(ulong userId)
         {
+            _logger.LogTrace("Getting user ID {userId}", userId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             return await con.GetAsync<User>(userId);
@@ -102,6 +105,7 @@ namespace VerifyBot.Services.Storage.MySql
         
         public async Task SetGuildVerifiedRoleId(ulong guildId, ulong roleId)
         {
+            _logger.LogTrace("Getting guild ID {guildId}", guildId);
             await createGuildIfNotExistAsync(guildId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
@@ -118,6 +122,7 @@ namespace VerifyBot.Services.Storage.MySql
         
         private async Task createUserIfNotExistAsync(ulong userId)
         {
+            _logger.LogTrace("Creating user if nonexistent in DB {userId}", userId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.ExecuteAsync(
@@ -133,6 +138,7 @@ namespace VerifyBot.Services.Storage.MySql
         
         private async Task createGuildIfNotExistAsync(ulong guildId)
         {
+            _logger.LogTrace("Creating guild if nonexistent in DB {guildId}", guildId);
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.ExecuteAsync(
@@ -157,10 +163,11 @@ namespace VerifyBot.Services.Storage.MySql
         /// <returns>A username record containing the encrypted</returns>
         private async Task<UsernameRecord> getAndSetUsernameRecord(string username)
         {
+            _logger.LogTrace("Getting username record and creating if nonexistent in DB.");
             username = username.ToLower();
-            _logger.LogDebug("Waiting for username record lock...");
+            _logger.LogTrace("Waiting for username record lock...");
             await _usernameRecordLock.WaitAsync();
-            _logger.LogDebug("Lock aquired.");
+            _logger.LogTrace("Lock aquired.");
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             try
             {
@@ -174,24 +181,25 @@ namespace VerifyBot.Services.Storage.MySql
                 {
                     if (isUsernameMatchAsync(usernameRecord, username))
                     {
-                        _logger.LogDebug("Match found: {id}", usernameRecord.id);
+                        _logger.LogTrace("Username record match found: {id}", usernameRecord.id);
                         return usernameRecord;
                     }
                 }
                 
                 _logger.LogDebug("No existing username found. Creating new record...");
                 var createdUsernameRecord = encryptUsernameAsync(username);
-                _logger.LogDebug("Inserting username record...");
+                _logger.LogTrace("Inserting username record...");
                 createdUsernameRecord.id = await con.InsertAsync(createdUsernameRecord);
                 
                 //await con.ExecuteAsync("UNLOCK TABLES;");
-                _logger.LogDebug("Insert complete.");
+                _logger.LogTrace("Insert complete.");
                 return createdUsernameRecord;
             }
             finally
             {
                 await con.CloseAsync();
                 _usernameRecordLock.Release();
+                _logger.LogTrace("Lock released.");
             }
         }
 
@@ -203,6 +211,7 @@ namespace VerifyBot.Services.Storage.MySql
         /// <returns>True if username is a match, false if it's not.</returns>
         private bool isUsernameMatchAsync(UsernameRecord usernameRecord, string username)
         {
+            _logger.LogTrace("Checking cryptographic username match between username and existing username record...");
             byte[] usernameBytes = Encoding.UTF8.GetBytes(username);
             
             // Combine username, salt and pepper for hashing.
@@ -216,6 +225,7 @@ namespace VerifyBot.Services.Storage.MySql
             using SHA512 sha = SHA512.Create();
             hash = sha.ComputeHash(hashInput);
 
+            _logger.LogTrace("Cryptographic equality check complete.");
             return usernameRecord.username_hash.SequenceEqual(hash);
         }
         
@@ -227,6 +237,7 @@ namespace VerifyBot.Services.Storage.MySql
         /// <returns>Encrypted/hashed result to be put into the database.</returns>
         private UsernameRecord encryptUsernameAsync(string username)
         {
+            _logger.LogTrace("Encrypting username...");
             // Generate new username record.
             RandomNumberGenerator rng = RNGCryptoServiceProvider.Create();
             byte[] usernameBytes = Encoding.UTF8.GetBytes(username);
@@ -251,6 +262,7 @@ namespace VerifyBot.Services.Storage.MySql
             using (SHA512 sha = SHA512.Create())
                 hash = sha.ComputeHash(hashInput);
 
+            _logger.LogTrace("Username encryption complete.");
             return new UsernameRecord()
             {
                 encrypted_username = encryptedUsername,

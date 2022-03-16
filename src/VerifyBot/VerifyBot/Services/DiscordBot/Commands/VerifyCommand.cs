@@ -14,7 +14,9 @@ namespace VerifyBot.Services.DiscordBot.Commands
         {
             _verificationService = verificationService ?? throw new ArgumentNullException(nameof(verificationService));
         }
-        
+
+        public string Name => "Verify";
+
         public SlashCommandProperties Build()
         {
             return new SlashCommandBuilder()

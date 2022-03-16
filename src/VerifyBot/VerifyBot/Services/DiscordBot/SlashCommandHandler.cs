@@ -42,9 +42,12 @@ namespace VerifyBot.Services.DiscordBot
                 _registeredCommands.Clear();
                 foreach (var command in _commands)
                 {
+                    _logger.LogTrace("Registering slash commands {command}", command.Name);
                     SocketApplicationCommand result = await _discordClient.CreateGlobalApplicationCommandAsync(command.Build());
                     _registeredCommands.Add(result.Id, command);
+                    _logger.LogTrace("Successfully registered slash command {command}. Discord ID {id}", command.Name, result.Id);
                 }
+                _logger.LogTrace("All slash commands registered.");
                 // Using the ready event is a simple implementation for the sake of the example. Suitable for testing and development.
                 // For a production bot, it is recommended to only run the CreateGlobalApplicationCommandAsync() once for each command.
             }
@@ -58,7 +61,7 @@ namespace VerifyBot.Services.DiscordBot
         
         private Task DiscordClientOnSlashCommandExecuted(ISlashCommandInteraction command)
         {
-            _logger.LogDebug("Slash command received {command}", command.Data.Name);
+            _logger.LogTrace("Slash command received {command}", command.Data.Name);
             try
             {
                 if (!_registeredCommands.TryGetValue(command.Data.Id, out ICommand commandModule))
@@ -83,7 +86,9 @@ namespace VerifyBot.Services.DiscordBot
         {
             try
             {
+                _logger.LogDebug("Executing slash command module {command}", commandModule.Name);
                 await commandModule.ExecuteAsync(command);
+                _logger.LogTrace("Slash command module {command} executed successfully.", commandModule.Name);
             }
             catch (Exception ex)
             {
