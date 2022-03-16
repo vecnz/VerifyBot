@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using VerifyBot.Services.Verification;
 
@@ -23,7 +24,7 @@ namespace VerifyBot.Services.DiscordBot.Commands
                 .Build();
         }
 
-        public async void Execute(ISlashCommandInteraction command)
+        public async Task ExecuteAsync(ISlashCommandInteraction command)
         {
             string firstOption = command.Data.Options.First().Value.ToString();
             if (VerificationService.IsVerificationToken(firstOption))

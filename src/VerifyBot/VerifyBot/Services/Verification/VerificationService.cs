@@ -75,8 +75,7 @@ namespace VerifyBot.Services.Verification
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to start verification. User ID {user}. Message {message}", userId, ex.Message,
-                    ex);
+                _logger.LogError(ex, "Failed to start verification. User ID {user}. Message {message}", userId, ex.Message);
                 return StartVerificationResult.Failure;
             }
         }
@@ -111,7 +110,7 @@ namespace VerifyBot.Services.Verification
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to finish verification. User ID {user}. Message {message}", userId, ex.Message, ex);
+                _logger.LogError(ex, "Failed to finish verification. User ID {user}. Message {message}", userId, ex.Message);
                 return FinishVerificationResult.Failure;
             }
         }

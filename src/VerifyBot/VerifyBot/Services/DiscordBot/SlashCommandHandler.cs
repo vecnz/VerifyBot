@@ -48,11 +48,11 @@ namespace VerifyBot.Services.DiscordBot
                 // Using the ready event is a simple implementation for the sake of the example. Suitable for testing and development.
                 // For a production bot, it is recommended to only run the CreateGlobalApplicationCommandAsync() once for each command.
             }
-            catch(HttpException exception)
+            catch(HttpException ex)
             {
                 // If our command was invalid, we should catch an ApplicationCommandException. This exception contains the path of the error as well as the error message. You can serialize the Error field in the exception to get a visual of where your error is.
-                var json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
-                _logger.LogError(json);
+                var json = JsonConvert.SerializeObject(ex.Errors, Formatting.Indented);
+                _logger.LogError(ex,"Error registering slash commands with Discord {message} {json}", ex.Message, json);
             }
         }
         
@@ -67,13 +67,30 @@ namespace VerifyBot.Services.DiscordBot
                     return Task.CompletedTask;
                 }
 
-                commandModule.Execute(command);
+                RunSlashCommand(commandModule, command);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError("Exception was thrown while running slash command {name} {id}", command.Data.Name, command.Data.Id, e);
+                _logger.LogError(ex, "Exception was thrown while running slash command {name} {id}", command.Data.Name, command.Data.Id);
             }
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Runs slash command with exception handling.
+        /// </summary>
+        private async void RunSlashCommand(ICommand commandModule ,ISlashCommandInteraction command)
+        {
+            try
+            {
+                await commandModule.ExecuteAsync(command);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception thrown while running slash command {command}. Message: {message}", command.Data.Name, ex.Message);
+                _logger.LogTrace("Sending server fail message in response to failed command.");
+                await command.RespondAsync("SERVER FAILURE TODO: translate this");
+            }
         }
     }
 }
