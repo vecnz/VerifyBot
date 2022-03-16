@@ -41,10 +41,12 @@ namespace VerifyBot.Services.Storage.MySql
 
         public async Task AddPendingVerificationAsync(ulong userId, string token, string username)
         {
+            _logger.LogDebug($"Adding pending verification to MySql database for user ID {userId}", userId);
+            _logger.LogTrace($"Getting username record from MySql database");
             var usernameRecord = await getAndSetUsernameRecord(username);
+            _logger.LogTrace($"Creating user record in DB if nonexistent.");
             await createUserIfNotExistAsync(userId);
-            
-            
+
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             await con.InsertAsync(new PendingVerification()
@@ -54,6 +56,7 @@ namespace VerifyBot.Services.Storage.MySql
                 token = token,
                 creation_time =  DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             });
+            _logger.LogDebug($"Pending verification added to MySql database for user ID {userId}", userId);
         }
 
         public async Task<PendingVerification> GetPendingVerificationAsync(ulong userId, string token)

@@ -57,14 +57,20 @@ namespace VerifyBot.Services.Verification
         {
             try
             {
+                _logger.LogInformation($"Start verification called by user ID {userId}", userId);
                 if (!IsEmailValid(email, out string username))
                 {
+                    _logger.LogDebug($"Invalid verification email supplied by user ID {userId}", userId);
                     return StartVerificationResult.InvalidEmail;
                 }
 
+                _logger.LogTrace($"Creating verification token for user ID {userId}", userId);
                 string token = await CreateVerificationTokenAsync(userId, username);
+                
+                _logger.LogTrace($"Sending verification email for user ID {userId}", userId);
                 await _emailService.SendVerificationEmailAsync(email, token);
                 
+                _logger.LogDebug($"Start verification succeeded for user ID {userId}", userId);
                 return StartVerificationResult.Success;
             }
             catch (Exception ex)
@@ -79,21 +85,28 @@ namespace VerifyBot.Services.Verification
         {
             try
             {
-                _logger.LogInformation("Finish verification called.");
+                _logger.LogInformation($"Finish verification called by user ID {userId}", userId);
                 PendingVerification pendingVerification = await _storageService.GetPendingVerificationAsync(userId, token);
                 if (pendingVerification == null)
                 {
+                    _logger.LogDebug($"Invalid verification token supplied by user ID {userId}", userId);
                     return FinishVerificationResult.InvalidToken;
                 }
 
                 if (DateTimeOffset.FromUnixTimeSeconds(pendingVerification.creation_time) <
                     DateTimeOffset.UtcNow - _verificationOptions.VerificationTokenExpiry)
                 {
+                    _logger.LogDebug($"Expired verification token supplied by user ID {userId}", userId);
                     return FinishVerificationResult.TokenExpired;
                 }
 
+                _logger.LogTrace($"Setting verified username for user ID {userId}", userId);
                 await _storageService.SetUserVerifiedUsernameId(userId, pendingVerification.username_record_id);
+                
+                _logger.LogTrace($"Calling verification changed event handler user ID {userId}", userId);
                 VerificationChanged?.Invoke(this, userId, true);
+                
+                _logger.LogDebug($"Finish verification succeeded for user ID {userId}", userId);
                 return FinishVerificationResult.Success;
             }
             catch (Exception ex)
