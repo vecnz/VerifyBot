@@ -98,7 +98,7 @@ namespace VerifyBot.Services.DiscordBot
             {
                 _logger.LogError(ex, "Exception thrown while running slash command {command}. Message: {message}", command.Data.Name, ex.Message);
                 _logger.LogTrace("Sending server fail message in response to failed command.");
-                await command.RespondAsync(_translator.T("SERVER_ERROR"));
+                await command.RespondAsync(_translator.T("SERVER_ERROR"), ephemeral: true);
             }
         }
     }
