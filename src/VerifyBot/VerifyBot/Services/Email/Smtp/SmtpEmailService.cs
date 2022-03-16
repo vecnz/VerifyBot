@@ -3,9 +3,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Discord.WebSocket;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
 using VerifyBot.Services.Email.Smtp.Configuration;
 
 namespace VerifyBot.Services.Email.Smtp
@@ -13,18 +12,23 @@ namespace VerifyBot.Services.Email.Smtp
     public class SmtpEmailService : IEmailService
     {
         private readonly SmtpEmailOptions _smtpOptions;
-
-        public SmtpEmailService(IOptions<SmtpEmailOptions> smtpOptions)
+        private readonly ILogger<SmtpEmailService> _logger;
+        
+        public SmtpEmailService(IOptions<SmtpEmailOptions> smtpOptions, ILogger<SmtpEmailService> logger)
         {
             _smtpOptions = smtpOptions?.Value ?? throw new ArgumentNullException(nameof(smtpOptions));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
         
         public async Task SendVerificationEmailAsync(string address, string token)
         {
+            _logger.LogDebug("Sending verification email.");
             using SmtpClient client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port);
             client.EnableSsl = _smtpOptions.UseSsl;
+            _logger.LogTrace("SMTP ssl {sslStatus}", _smtpOptions.UseSsl ? "Enabled" : "Disabled");
             if (_smtpOptions.UseAuthentication)
             {
+                _logger.LogTrace("SMTP authentication enabled.");
                 client.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
             }
 
@@ -40,7 +44,9 @@ namespace VerifyBot.Services.Email.Smtp
             message.Subject = _smtpOptions.SubjectTemplate.Replace("{token}", token);
             message.SubjectEncoding = Encoding.UTF8;
             
+            _logger.LogTrace("Starting SMTP send...");
             await client.SendMailAsync(message);
+            _logger.LogTrace("SMTP send completed.");
 
             // Clean up
             message.Dispose();
