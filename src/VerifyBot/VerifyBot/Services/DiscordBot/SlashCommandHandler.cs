@@ -91,6 +91,7 @@ namespace VerifyBot.Services.DiscordBot
             try
             {
                 _logger.LogDebug("Executing slash command module {command}", commandModule.Name);
+                await command.DeferAsync(ephemeral: true);
                 await commandModule.ExecuteAsync(command);
                 _logger.LogTrace("Slash command module {command} executed successfully.", commandModule.Name);
             }
@@ -98,7 +99,7 @@ namespace VerifyBot.Services.DiscordBot
             {
                 _logger.LogError(ex, "Exception thrown while running slash command {command}. Message: {message}", command.Data.Name, ex.Message);
                 _logger.LogTrace("Sending server fail message in response to failed command.");
-                await command.RespondAsync(_translator.T("SERVER_ERROR"), ephemeral: true);
+                await command.FollowupAsync(_translator.T("SERVER_ERROR"), ephemeral: true);
             }
         }
     }
