@@ -146,6 +146,8 @@ namespace VerifyBot.Services.DiscordBot
 
             try
             {
+                _logger.LogDebug("Checking user {uname} {uid} verification status in {gname} {gid}", user.Username, user.Id, guild.Name, guild.Id);
+                
                 ulong? verifiedRoleId = (await _storageService.GetGuildAsync(guild.Id))?.verified_role_id;
                 if (verifiedRoleId == null)
                 {
@@ -183,10 +185,12 @@ namespace VerifyBot.Services.DiscordBot
                         await guildUser.RemoveRoleAsync(verifiedRole);
                     }
                 }
+                
+                _logger.LogTrace("User {uname} {uid} has correct verification status in {gname} {gid}", user.Username, user.Id, guild.Name, guild.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to update user verification in guild {name} {id} {message}", guild.Name, guild.Id, ex.Message);
+                _logger.LogError(ex, "Failed to update user verification in guild {name} {id} {message}", guild.Name, guild.Id, ex.Message);
             }
         }
 
@@ -197,6 +201,8 @@ namespace VerifyBot.Services.DiscordBot
         {
             try
             {
+                _logger.LogTrace("Checking if verified role exists in {gname} {gid}", guild.Name, guild.Id);
+                
                 ulong? verifiedRoleId = (await _storageService.GetGuildAsync(guild.Id))?.verified_role_id;
                 if (verifiedRoleId == null)
                 {
@@ -213,10 +219,12 @@ namespace VerifyBot.Services.DiscordBot
                     var role = await guild.CreateRoleAsync(_botOptions.DefaultVerifiedRoleName);
                     await _storageService.SetGuildVerifiedRoleId(guild.Id, role.Id);
                 }
+                
+                _logger.LogTrace("Verified role already exists in guild {gname} {gid}", guild.Name, guild.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to create verified role in guild {name} {id} {message}", guild.Name, guild.Id, ex.Message);
+                _logger.LogError(ex, "Failed to create verified role in guild {name} {id} {message}", guild.Name, guild.Id, ex.Message);
             }
         }
     }

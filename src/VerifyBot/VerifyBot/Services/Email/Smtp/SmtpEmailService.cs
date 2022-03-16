@@ -22,35 +22,40 @@ namespace VerifyBot.Services.Email.Smtp
         
         public async Task SendVerificationEmailAsync(string address, string token)
         {
-            _logger.LogDebug("Sending verification email.");
-            using SmtpClient client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port);
-            client.EnableSsl = _smtpOptions.UseSsl;
-            _logger.LogTrace("SMTP ssl {sslStatus}", _smtpOptions.UseSsl ? "Enabled" : "Disabled");
-            if (_smtpOptions.UseAuthentication)
+            try
             {
-                _logger.LogTrace("SMTP authentication enabled.");
-                client.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
-            }
+                _logger.LogDebug("Sending verification email.");
+                using SmtpClient client = new SmtpClient(_smtpOptions.Host, _smtpOptions.Port);
+                _logger.LogTrace("SMTP ssl {sslStatus}", _smtpOptions.UseSsl ? "Enabled" : "Disabled");
+                client.EnableSsl = _smtpOptions.UseSsl;
+                _logger.LogTrace("SMTP authentication {sslStatus}", _smtpOptions.UseAuthentication ? "Enabled" : "Disabled");
+                if (_smtpOptions.UseAuthentication)
+                {
+                    client.Credentials = new NetworkCredential(_smtpOptions.Username, _smtpOptions.Password);
+                }
 
-            // To and from addresses
-            MailAddress from = new MailAddress(_smtpOptions.FromAddress, _smtpOptions.FromName, Encoding.UTF8);
-            MailAddress to = new MailAddress(address);
+                // To and from addresses
+                MailAddress from = new MailAddress(_smtpOptions.FromAddress, _smtpOptions.FromName, Encoding.UTF8);
+                MailAddress to = new MailAddress(address);
 
-            // Create message
-            using MailMessage message = new MailMessage(from, to);
-            message.IsBodyHtml = _smtpOptions.BodyIsHtml;
-            message.Body = _smtpOptions.BodyTemplate.Replace("{token}", token);
-            message.BodyEncoding = Encoding.UTF8;
-            message.Subject = _smtpOptions.SubjectTemplate.Replace("{token}", token);
-            message.SubjectEncoding = Encoding.UTF8;
+                // Create message
+                using MailMessage message = new MailMessage(from, to);
+                message.IsBodyHtml = _smtpOptions.BodyIsHtml;
+                message.Body = _smtpOptions.BodyTemplate.Replace("{token}", token);
+                message.BodyEncoding = Encoding.UTF8;
+                message.Subject = _smtpOptions.SubjectTemplate.Replace("{token}", token);
+                message.SubjectEncoding = Encoding.UTF8;
             
-            _logger.LogTrace("Starting SMTP send...");
-            await client.SendMailAsync(message);
-            _logger.LogTrace("SMTP send completed.");
-
-            // Clean up
-            message.Dispose();
-            client.Dispose();
+                _logger.LogTrace("Starting SMTP send...");
+                await client.SendMailAsync(message);
+                _logger.LogTrace("SMTP send completed.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send verification email. Message: {message}", ex.Message);
+                throw ex;
+            }
+            
         }
     }
 }

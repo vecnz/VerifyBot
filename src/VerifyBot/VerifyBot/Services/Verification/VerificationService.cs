@@ -75,8 +75,7 @@ namespace VerifyBot.Services.Verification
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to start verification. User ID {user}. Message {message}", userId, ex.Message,
-                    ex);
+                _logger.LogError(ex, "Failed to start verification. User ID {user}. Message {message}", userId, ex.Message);
                 return StartVerificationResult.Failure;
             }
         }
@@ -111,7 +110,7 @@ namespace VerifyBot.Services.Verification
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to finish verification. User ID {user}. Message {message}", userId, ex.Message, ex);
+                _logger.LogError(ex, "Failed to finish verification. User ID {user}. Message {message}", userId, ex.Message);
                 return FinishVerificationResult.Failure;
             }
         }
@@ -128,13 +127,14 @@ namespace VerifyBot.Services.Verification
         
         private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
         {
+            _logger.LogTrace("Creating new verification token for user ID {userId}", userId);
             // Generate random Base32 token for user to verify with.
             byte[] tokenBuffer = new byte[RandomTokenLength];
             new RNGCryptoServiceProvider().GetBytes(tokenBuffer);
             string token = "$" + Base32.ToString(tokenBuffer);
 
             await _storageService.AddPendingVerificationAsync(userId, token, username);
-
+            _logger.LogTrace("Successfuly created new verification token for user ID {userId}", userId);
             return token;
         }
 
@@ -156,12 +156,18 @@ namespace VerifyBot.Services.Verification
         
         public async Task<bool> IsUserVerifiedAsync(ulong userId)
         {
+            _logger.LogTrace("Getting user verification status for user ID {userId}", userId);
             var user = await _storageService.GetUserAsync(userId);
             if (user == null)
             {
+                _logger.LogTrace("User ID {userId} is {verified}", userId, "Unverified");
                 return false;
             }
-            return user.username_record_id != null;
+            
+            
+            bool verified = user.username_record_id != null;
+            _logger.LogTrace("User ID {userId} is {verified}.", userId, verified ? "Verified" : "Unverified");
+            return verified;
         }
     }
 }
