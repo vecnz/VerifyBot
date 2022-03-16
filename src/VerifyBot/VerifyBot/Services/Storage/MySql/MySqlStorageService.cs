@@ -18,6 +18,7 @@ namespace VerifyBot.Services.Storage.MySql
     public class MySqlStorageService
     {
         public const string UserTable = "user";
+        public const string GuildTable = "guild";
         public const string UsernameRecordTable = "username_record";
         public const string PendingVerificationTable = "pending_verification";
 
@@ -82,11 +83,34 @@ namespace VerifyBot.Services.Storage.MySql
                 });
         }
 
-        public async Task<User> GetUser(ulong userId)
+        public async Task<User> GetUserAsync(ulong userId)
         {
             await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
             await con.OpenAsync();
             return await con.GetAsync<User>(userId);
+        }
+
+        public async Task<Guild> GetGuildAsync(ulong guildId)
+        {
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            return await con.GetAsync<Guild>(guildId);
+        }
+        
+        public async Task SetGuildVerifiedRoleId(ulong guildId, ulong roleId)
+        {
+            await createGuildIfNotExistAsync(guildId);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            await con.ExecuteAsync(
+                $@"UPDATE `{GuildTable}`
+                    SET `verified_role_id` = @roleId
+                    WHERE `id` = @guildId;",
+                new
+                {
+                    roleId,
+                    guildId
+                });
         }
         
         private async Task createUserIfNotExistAsync(ulong userId)
@@ -100,6 +124,21 @@ namespace VerifyBot.Services.Storage.MySql
                 new
                 {
                     userId = userId,
+                    time = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                });
+        }
+        
+        private async Task createGuildIfNotExistAsync(ulong guildId)
+        {
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+            await con.ExecuteAsync(
+                $@"INSERT IGNORE INTO `{GuildTable}` 
+                        (`id`, `creation_time`)
+                        VALUES (@guildId, @time);",
+                new
+                {
+                    guildId = guildId,
                     time = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                 });
         }

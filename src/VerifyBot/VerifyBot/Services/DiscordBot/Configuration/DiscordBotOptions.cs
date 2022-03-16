@@ -6,5 +6,6 @@ namespace VerifyBot.Services.DiscordBot.Configuration
 
         public string Token { get; set; } = string.Empty;
         public string StatusText { get; set; } = string.Empty;
+        public string DefaultVerifiedRoleName { get; set; } = string.Empty;
     }
 }

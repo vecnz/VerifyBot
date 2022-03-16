@@ -11,6 +11,11 @@ namespace VerifyBot.Services.DiscordBot.Configuration
                 return ValidateOptionsResult.Fail("Missing Discord bot token.");
             }
 
+            if (string.IsNullOrWhiteSpace(options.DefaultVerifiedRoleName))
+            {
+                return ValidateOptionsResult.Fail("Missing default verified role name.");
+            }
+            
             return ValidateOptionsResult.Success;
         }
     }

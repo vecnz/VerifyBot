@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace VerifyBot.Services.Verification
         private static readonly Regex TokenPattern = new Regex("^\\$[A-Z0-9]+$");
 
         public delegate void VerificationChangedEventHandler(VerificationService sender, ulong userId, bool verified);
-        public event VerificationChangedEventHandler VerificationChanged;
+        public static event VerificationChangedEventHandler VerificationChanged;
         
         public enum StartVerificationResult
         {
@@ -144,7 +143,11 @@ namespace VerifyBot.Services.Verification
         
         public async Task<bool> IsUserVerifiedAsync(ulong userId)
         {
-            var user = await _storageService.GetUser(userId);
+            var user = await _storageService.GetUserAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
             return user.username_record_id != null;
         }
     }
