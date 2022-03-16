@@ -9,6 +9,7 @@ using Serilog;
 using VerifyBot.Services.DiscordBot.Helpers;
 using VerifyBot.Services.Email.Smtp.Helpers;
 using VerifyBot.Services.Storage.MySql.Helpers;
+using VerifyBot.Services.Translation.Helpers;
 using VerifyBot.Services.Verification.Helpers;
 
 namespace VerifyBot
@@ -58,6 +59,7 @@ namespace VerifyBot
             services.AddMySql(_configuration);
             services.AddSmtpEmail(_configuration);
             services.AddVerification(_configuration);
+            services.AddHardCodedTranslator();
         }
     }
 }
