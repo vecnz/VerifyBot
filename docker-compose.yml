@@ -18,8 +18,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./public.pem:/app/public.pem
-
+      - ./verifybot_public.crt:/app/verifybot_public.crt
 volumes:
   db_storage:
 
