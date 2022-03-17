@@ -2,6 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Discord.Rest;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VerifyBot.Services.Email;
@@ -36,6 +37,7 @@ namespace VerifyBot.Services.Verification
         public enum FinishVerificationResult
         {
             Success,
+            AlreadyVerified,
             InvalidToken,
             TokenExpired,
             Failure
@@ -58,6 +60,12 @@ namespace VerifyBot.Services.Verification
             try
             {
                 _logger.LogInformation($"Start verification called by user ID {userId}", userId);
+                if (await IsUserVerifiedAsync(userId))
+                {
+                    _logger.LogDebug($"User is already verified user ID {userId}", userId);
+                    return StartVerificationResult.AlreadyVerified;
+                }
+                
                 if (!IsEmailValid(email, out string username))
                 {
                     _logger.LogDebug($"Invalid verification email supplied by user ID {userId}", userId);
@@ -65,8 +73,9 @@ namespace VerifyBot.Services.Verification
                 }
 
                 _logger.LogTrace($"Creating verification token for user ID {userId}", userId);
+                await cleanOldPendingVerificationsAsync();
                 string token = await CreateVerificationTokenAsync(userId, username);
-                
+                                
                 _logger.LogTrace($"Sending verification email for user ID {userId}", userId);
                 await _emailService.SendVerificationEmailAsync(email, token);
                 
@@ -85,6 +94,12 @@ namespace VerifyBot.Services.Verification
             try
             {
                 _logger.LogInformation($"Finish verification called by user ID {userId}", userId);
+                if (await IsUserVerifiedAsync(userId))
+                {
+                    _logger.LogDebug($"User is already verified user ID {userId}", userId);
+                    return FinishVerificationResult.AlreadyVerified;
+                }
+                
                 PendingVerification pendingVerification = await _storageService.GetPendingVerificationAsync(userId, token);
                 if (pendingVerification == null)
                 {
@@ -101,6 +116,7 @@ namespace VerifyBot.Services.Verification
 
                 _logger.LogTrace($"Setting verified username for user ID {userId}", userId);
                 await _storageService.SetUserVerifiedUsernameId(userId, pendingVerification.username_record_id);
+                await _storageService.DeleteUserPendingVerificationsAsync(userId);
                 
                 _logger.LogTrace($"Calling verification changed event handler user ID {userId}", userId);
                 VerificationChanged?.Invoke(this, userId, true);
@@ -123,19 +139,6 @@ namespace VerifyBot.Services.Verification
         public static bool IsVerificationToken(string token)
         {
             return TokenPattern.IsMatch(token.ToUpper());
-        }
-        
-        private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
-        {
-            _logger.LogTrace("Creating new verification token for user ID {userId}", userId);
-            // Generate random Base32 token for user to verify with.
-            byte[] tokenBuffer = new byte[RandomTokenLength];
-            new RNGCryptoServiceProvider().GetBytes(tokenBuffer);
-            string token = "$" + Base32.ToString(tokenBuffer);
-
-            await _storageService.AddPendingVerificationAsync(userId, token, username);
-            _logger.LogTrace("Successfuly created new verification token for user ID {userId}", userId);
-            return token;
         }
 
         /// <summary>
@@ -168,6 +171,27 @@ namespace VerifyBot.Services.Verification
             bool verified = user.username_record_id != null;
             _logger.LogTrace("User ID {userId} is {verified}.", userId, verified ? "Verified" : "Unverified");
             return verified;
+        }
+        
+        private async Task<string> CreateVerificationTokenAsync(ulong userId, string username)
+        {
+            _logger.LogTrace("Creating new verification token for user ID {userId}", userId);
+            // Generate random Base32 token for user to verify with.
+            byte[] tokenBuffer = new byte[RandomTokenLength];
+            new RNGCryptoServiceProvider().GetBytes(tokenBuffer);
+            string token = "$" + Base32.ToString(tokenBuffer);
+
+            await _storageService.AddPendingVerificationAsync(userId, token, username);
+            _logger.LogTrace("Successfuly created new verification token for user ID {userId}", userId);
+            return token;
+        }
+
+        private async Task cleanOldPendingVerificationsAsync()
+        {
+            _logger.LogTrace("Cleaning up old pending verifications.");
+            // Any pending verifications older than double the expiry time will get deleted.
+            DateTimeOffset deletionTime = DateTimeOffset.UtcNow - (_verificationOptions.VerificationTokenExpiry * 2);
+            await _storageService.DeletePendingVerificationsOlderThan(deletionTime.ToUnixTimeSeconds());
         }
     }
 }

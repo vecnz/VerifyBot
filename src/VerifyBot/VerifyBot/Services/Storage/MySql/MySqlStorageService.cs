@@ -73,6 +73,34 @@ namespace VerifyBot.Services.Storage.MySql
                     token
                 });
         }
+
+        public async Task DeleteUserPendingVerificationsAsync(ulong userId)
+        {
+            _logger.LogTrace("Deleting all pending verifications for user ID {userId}", userId);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+
+            await con.ExecuteAsync(
+                $@"DELETE FROM `{PendingVerificationTable}` WHERE `user_id` = @userId",
+                new
+                {
+                    userId,
+                });
+        }
+        
+        public async Task DeletePendingVerificationsOlderThan(long time)
+        {
+            _logger.LogTrace("Deleting all pending verifications older than {time}", time);
+            await using var con = new MySqlConnection(_mySqlStorageOptions.ConnectionString);
+            await con.OpenAsync();
+
+            await con.ExecuteAsync(
+                $@"DELETE FROM `{PendingVerificationTable}` WHERE `creation_time` < @time",
+                new
+                {
+                    time,
+                });
+        }
         
         public async Task SetUserVerifiedUsernameId(ulong userId, int? usernameRecordId)
         {

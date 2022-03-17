@@ -43,16 +43,19 @@ namespace VerifyBot.Services.DiscordBot.Commands
                 switch (result)
                 {
                     case VerificationService.FinishVerificationResult.Failure:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_FINISH_FAIL"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_FAIL"), ephemeral: true);
                         break;
                     case VerificationService.FinishVerificationResult.InvalidToken:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_FINISH_INVALID_TOKEN"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_INVALID_TOKEN"), ephemeral: true);
                         break;
                     case VerificationService.FinishVerificationResult.TokenExpired:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_FINISH_EXPIRED_TOKEN"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_EXPIRED_TOKEN"), ephemeral: true);
+                        break;
+                    case VerificationService.FinishVerificationResult.AlreadyVerified:
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_ALREADY_VERIFIED"), ephemeral: true);
                         break;
                     case VerificationService.FinishVerificationResult.Success:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_FINISH_SUCCESS"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_FINISH_SUCCESS"), ephemeral: true);
                         break;
                     default: // Should never hit this
                         throw new ArgumentOutOfRangeException($"Unhandled {nameof(VerificationService.FinishVerificationResult)} case. " + result.ToString());
@@ -65,16 +68,16 @@ namespace VerifyBot.Services.DiscordBot.Commands
                 switch (result)
                 {
                     case VerificationService.StartVerificationResult.Failure:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_START_FAIL"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_START_FAIL"), ephemeral: true);
                         break;
                     case VerificationService.StartVerificationResult.InvalidEmail:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_START_INVALID_EMAIL"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_START_INVALID_EMAIL"), ephemeral: true);
                         break;
                     case VerificationService.StartVerificationResult.AlreadyVerified:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_START_ALREADY_VERIFIED"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_START_ALREADY_VERIFIED"), ephemeral: true);
                         break;
                     case VerificationService.StartVerificationResult.Success:
-                        await command.RespondAsync(_translator.T("VERIFY_COMMAND_START_SUCCESS"), ephemeral: true);
+                        await command.FollowupAsync(_translator.T("VERIFY_COMMAND_START_SUCCESS"), ephemeral: true);
                         break;
                     default: // Should never hit this
                         throw new ArgumentOutOfRangeException($"Unhandled {nameof(VerificationService.StartVerificationResult)} case. " + result.ToString());
