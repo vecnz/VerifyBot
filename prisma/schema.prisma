@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Server {
+  id           String   @id
+  student_role String
+  server_role  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id             String         @id
+  email          String
+  createdAt      DateTime       @default(now())
+  student        Boolean        @default(true)
+  lastVerifiedAt DateTime
+  Verification   Verification[]
+}
+
+model Verification {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  code      String
+  completed Boolean @default(false)
+  userId    String  @unique
+}

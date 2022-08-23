@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  bot:
+    container_name: VicVerify
+    restart: unless-stopped
+    build: .
+    env_file:
+      - '.env'
+
+  db:
+    image: postgres:alpine
+    container_name: VicVerify-db
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - '.env'
+
+volumes:
+  db:
