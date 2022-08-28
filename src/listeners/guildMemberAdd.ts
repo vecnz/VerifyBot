@@ -4,6 +4,8 @@ import type { GuildMember } from 'discord.js';
 
 export class GuildMemberAdd extends Listener {
 	public async run(member: GuildMember) {
+		if (member.user.bot) return;
+
 		// check if the member is verified
 		const user = await this.container.db.user.findFirst({
 			where: {
@@ -13,9 +15,11 @@ export class GuildMemberAdd extends Listener {
 
 		if (!user || !user.verified) {
 			// Send a dm to the member saying they need to verify
-			await member.send(
-				`Kia ora ${member.user.username}, you need to verify your account before you can fully interact with this server and other VUW servers.\n\nPlease run \`/verify\` to verify your account.`
-			);
+			try {
+				await member.send(
+					`Kia ora ${member.user.username}, you need to verify your account before you can fully interact with this server and other VUW servers.\n\nPlease run \`/verify\` to verify your account.`
+				);
+			} catch (error) {}
 			return;
 		}
 
