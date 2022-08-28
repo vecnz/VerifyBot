@@ -21,15 +21,16 @@ export class GuildJoin extends Listener {
 			});
 		}
 
+		const staffRole = await guild.roles.create({
+			name: 'Faculty',
+			reason: 'VicVerify Faculty Role'
+		});
+
 		const studentRole = await guild.roles.create({
 			name: 'Student',
 			reason: 'VicVerify Student Role'
 		});
 
-		const staffRole = await guild.roles.create({
-			name: 'Faculty',
-			reason: 'VicVerify Faculty Role'
-		});
 		// create entry in the database
 		await this.container.db.server.create({
 			data: {
