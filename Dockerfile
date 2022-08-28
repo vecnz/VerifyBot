@@ -53,12 +53,13 @@ ENV NODE_OPTIONS="--enable-source-maps --preserve-symlinks"
 
 WORKDIR /usr/src/app
 
-# Copy the environment variables to the container and language folder including the dist folder 
 COPY --chown=node:node --from=build /usr/src/app/dist dist
-
-# Patch .prisma with the built files
+COPY --chown=node:node --from=build /usr/src/app/node_modules node_modules/.prisma
+COPY --chown=node:node --from=build  /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build  /usr/src/app/package.json ./
+COPY --chown=node:node --from=build  /usr/src/app/yarn.lock ./
+COPY --chown=node:node --from=build  /usr/src/app/prisma ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules/.prisma node_modules/.prisma
-
 COPY --chown=node:node start.sh /usr/src/app/start.sh
 
 USER node
