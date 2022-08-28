@@ -1,4 +1,5 @@
-yarn_modules
+node_modules
 README.md
 .gitignore
-.prettuerignore
+.prettierignore
+dist
