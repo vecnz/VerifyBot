@@ -60,7 +60,7 @@
 		"prepare": "husky install .github/husky"
 	},
 	"prettier": "@sapphire/prettier-config",
-	"packageManager": "yarn@3.2.2",
+	"packageManager": "yarn@3.2.3",
 	"imports": {
 		"#lib/*": "./dist/lib/*.js",
 		"#root/*": "./dist/*.js"
