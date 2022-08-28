@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 	from: 'VUW Discord Verification <verify@vec.ac.nz>'
 });
 
-transporter.verify((error, success) => {
+transporter.verify((error) => {
 	if (error) {
 		container.logger.error(error);
 	} else {
@@ -41,7 +41,7 @@ async function main() {
 	} catch (error) {
 		container.logger.error(error);
 		client.destroy();
-		container.db.$disconnect();
+		await container.db.$disconnect();
 		process.exit(1);
 	}
 }

@@ -41,16 +41,16 @@ export class UserCommand extends Command {
 
 		// check if valid email and end in @myvuw.ac.nz
 		if ((role === 'student' && !/^.+@myvuw\.ac\.nz$/.test(email)) || (role === 'staff' && !/^.+@vuw\.ac\.nz$/.test(email))) {
-			interaction.reply({ content: 'Invalid email address. Please use your VUW email address.', ephemeral: true });
+			await interaction.reply({ content: 'Invalid email address. Please use your VUW email address.', ephemeral: true });
 			return;
 		}
 
 		// check if user is already verified
-		const emailLinked = await this.container.db.user.findFirst({ where: { email: email } });
+		const emailLinked = await this.container.db.user.findFirst({ where: { email } });
 
 		// Needs to be expanded on to add checks if the user is verified as that email and provide a way to move verification to a new discord
 		if (emailLinked && emailLinked.verified) {
-			interaction.reply({ content: 'This email is already verified email.', ephemeral: true });
+			await interaction.reply({ content: 'This email is already verified email.', ephemeral: true });
 			return;
 		}
 
@@ -73,14 +73,14 @@ export class UserCommand extends Command {
 		// create verification record
 		await this.container.db.verificationRecord.create({
 			data: {
-				code: code,
+				code,
 				isStudent: role === 'student',
-				email: email,
+				email,
 				user: { connect: { id: discordLinked.id } }
 			}
 		});
 
-		//Send verification email code to user
+		// Send verification email code to user
 		try {
 			await this.container.email.sendMail({
 				from: 'verify@vec.ac.nz',
@@ -90,7 +90,7 @@ export class UserCommand extends Command {
 			});
 		} catch (error) {
 			this.container.logger.error(error);
-			interaction.reply({
+			await interaction.reply({
 				content: `There was an error sending the verification email. If this problem persists please raise an issue at our github: ${github}`,
 				ephemeral: true
 			});
@@ -98,6 +98,6 @@ export class UserCommand extends Command {
 		}
 
 		// Reply to user saying verification email has been sent
-		interaction.reply({ content: `Verification email sent to ${email}.`, ephemeral: true });
+		await interaction.reply({ content: `Verification email sent to ${email}.`, ephemeral: true });
 	}
 }

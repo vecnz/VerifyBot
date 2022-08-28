@@ -22,7 +22,7 @@ export class UserCommand extends Command {
 		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
 
 		if (!user) {
-			interaction.reply({ content: 'You are not in the system.', ephemeral: true });
+			await interaction.reply({ content: 'You are not in the system.', ephemeral: true });
 			return;
 		}
 

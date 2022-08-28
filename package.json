@@ -2,9 +2,27 @@
 	"name": "VicVerify",
 	"version": "1.0.0",
 	"main": "dist/index.js",
-	"author": "@sapphire",
-	"license": "UNLICENSE",
+	"author": "@vecnz <tech@vec.ac.nz>",
+	"license": "AGPLv3+",
 	"type": "module",
+	"scripts": {
+		"lint": "eslint src --ext ts --fix",
+		"format": "prettier --write src",
+		"typecheck": "tsc -b src",
+		"start": "node --preserve-symlinks --enable-source-maps dist/index.js",
+		"build": "tsup",
+		"watch": "tsup --watch",
+		"dev": "tsup --watch --onSuccess \"yarn start\"",
+		"prepare": "husky install .github/husky",
+		"postinstall": "husky install",
+		"prepack": "pinst --disable",
+		"postpack": "pinst --enable",
+		"test": ""
+	},
+	"imports": {
+		"#lib/*": "./dist/lib/*.js",
+		"#root/*": "./dist/*.js"
+	},
 	"dependencies": {
 		"@prisma/client": "4.2.1",
 		"@sapphire/decorators": "^4.3.8",
@@ -27,8 +45,8 @@
 		"reflect-metadata": "^0.1.13"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "17.1.1",
-		"@commitlint/config-conventional": "17.1.0",
+		"@commitlint/cli": "^17.1.1",
+		"@commitlint/config-conventional": "^17.1.0",
 		"@sapphire/eslint-config": "4.3.8",
 		"@sapphire/prettier-config": "1.4.4",
 		"@sapphire/ts-config": "3.3.4",
@@ -37,32 +55,34 @@
 		"@types/node": "18.7.13",
 		"@types/nodemailer": "6.4.5",
 		"@types/ws": "8.5.3",
+		"@typescript-eslint/eslint-plugin": "^5.35.1",
+		"@typescript-eslint/parser": "^5.35.1",
 		"eslint": "8.23.0",
-		"husky": "8.0.1",
-		"lint-staged": "13.0.3",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"husky": "^8.0.1",
+		"lint-staged": "^13.0.3",
 		"npm-run-all": "4.1.5",
+		"pinst": "^3.0.0",
 		"prettier": "2.7.1",
-		"pretty-quick": "3.1.3",
+		"pretty-quick": "^3.1.3",
 		"prisma": "4.2.1",
+		"ts-node": "^10.9.1",
 		"tsc-watch": "5.0.3",
 		"tsup": "6.2.3",
 		"typescript": "4.8.2"
 	},
-	"scripts": {
-		"lint": "eslint src --ext ts --fix",
-		"format": "prettier --write src",
-		"typecheck": "tsc -b src",
-		"start": "node --preserve-symlinks --enable-source-maps dist/index.js",
-		"build": "tsup",
-		"watch": "tsup --watch",
-		"dev": "tsup --watch --onSuccess \"yarn start\"",
-		"i18n:setup": "esno ./src/lib/i18n/setup.ts",
-		"prepare": "husky install .github/husky"
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"lint-staged": {
+		"*.{mjs,js,ts}": "eslint --fix --ext mjs,js,ts"
 	},
 	"prettier": "@sapphire/prettier-config",
-	"packageManager": "yarn@3.2.3",
-	"imports": {
-		"#lib/*": "./dist/lib/*.js",
-		"#root/*": "./dist/*.js"
-	}
+	"eslintConfig": {
+		"extends": "@sapphire"
+	},
+	"packageManager": "yarn@3.2.3"
 }

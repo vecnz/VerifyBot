@@ -33,26 +33,25 @@ export class UserCommand extends Command {
 		)[0];
 
 		if (!user || !verificationRecord) {
-			interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
+			await interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
 			return;
 		}
 
 		if (verificationRecord.completed) {
 			if (user.verified) {
-				interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
-				return;
-			} else {
-				interaction.reply({
-					content: 'You have already completed verification. If you wish to re-verify please run `/verify`',
-					ephemeral: true
-				});
+				await interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
 				return;
 			}
+			await interaction.reply({
+				content: 'You have already completed verification. If you wish to re-verify please run `/verify`',
+				ephemeral: true
+			});
+			return;
 		}
 
 		// check if the code is correct
 		if (verificationRecord.code !== code) {
-			interaction.reply({ content: 'Invalid code. Please try again.', ephemeral: true });
+			await interaction.reply({ content: 'Invalid code. Please try again.', ephemeral: true });
 			return;
 		}
 
