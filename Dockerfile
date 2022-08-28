@@ -21,6 +21,7 @@ COPY --chown=node:node yarn.lock .
 COPY --chown=node:node package.json .
 COPY --chown=node:node .yarnrc.yml .
 COPY --chown=node:node .yarn/ .yarn/
+COPY --chown=node:node prisma/ .
 
 ENTRYPOINT ["dumb-init", "--"]
 
@@ -55,11 +56,7 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=build /usr/src/app/dist dist
 COPY --chown=node:node --from=build /usr/src/app/node_modules node_modules/.prisma
-COPY --chown=node:node --from=build  /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build  /usr/src/app/package.json ./
-COPY --chown=node:node --from=build  /usr/src/app/yarn.lock ./
-COPY --chown=node:node --from=build  /usr/src/app/prisma ./
-COPY --chown=node:node --from=build /usr/src/app/node_modules/.prisma node_modules/.prisma
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node start.sh /usr/src/app/start.sh
 
 USER node
