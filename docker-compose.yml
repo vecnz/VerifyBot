@@ -15,6 +15,7 @@ services:
   bot:
     container_name: VicVerify
     restart: unless-stopped
+    image: ghcr.io/darkflame72/vicverify:main
     build: .
     env_file:
       - '.env'
