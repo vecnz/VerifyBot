@@ -33,9 +33,15 @@ export class UserCommand extends Command {
 			if (!guild.members.cache.has(authorId)) {
 				await guild.members.fetch();
 			}
-			if (guild.members.cache.has(authorId)) {
+			if (guild.members.cache.has(authorId) && user.isStudent) {
 				const verifiedRole = await this.container.db.server.findFirst({ where: { id: guild.id } });
-				const role = user.isStudent ? verifiedRole?.staffRole : verifiedRole?.studentRole;
+				let role;
+				if (user.isStudent) {
+					role = verifiedRole?.studentRole;
+				} else {
+					role = verifiedRole?.staffRole;
+				}
+
 				if (role) {
 					await (guild.members.cache.get(authorId) as GuildMember).roles.remove(role);
 				}
