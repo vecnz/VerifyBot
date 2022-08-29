@@ -39,5 +39,24 @@ export class GuildJoin extends Listener {
 				staffRole: staffRole.id
 			}
 		});
+
+		// Get all members in the server
+		const members = await guild.members.fetch();
+		members.forEach(async (member) => {
+			// check if member is verified
+			const user = await this.container.db.user.findFirst({
+				where: {
+					id: member.user.id
+				}
+			});
+			if (user && user?.verified) {
+				// add verified role to member
+				if (user.isStudent) {
+					await member.roles.add(studentRole);
+				} else {
+					await member.roles.add(staffRole);
+				}
+			}
+		});
 	}
 }
