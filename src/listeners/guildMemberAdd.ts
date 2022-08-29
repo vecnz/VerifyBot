@@ -9,7 +9,7 @@ export class GuildMemberAdd extends Listener {
 		// check if the member is verified
 		const user = await this.container.db.user.findFirst({
 			where: {
-				id: member.id
+				id: member.user.id
 			}
 		});
 
