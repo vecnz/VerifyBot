@@ -68,3 +68,18 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Privacy Policy
+
+We collect personal information from you, including information about your:
+Email address
+Discord account ID
+
+We collect your personal information in order to:
+verify Te Herenga Waka - Victoria University of Wellington students and link their Discord accounts to their email address.
+
+We keep your information safe by storing it in a private database and only allowing University staff and the Student Interest and Conflict Resolution team to access you linked email address and history of verification attempts.
+
+We keep your information for as long as you remain verified at which point we securely destroy it by securely erasing all data after 30 days from your request.
+
+You have the right to ask for a copy of any personal information we hold about you, and to ask for it to be corrected if you think it is wrong. If you’d like to ask for a copy of your information, or to have it corrected, please contact us at tech@vec.ac.nz.
