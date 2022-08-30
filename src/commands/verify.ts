@@ -41,7 +41,10 @@ export class UserCommand extends Command {
 		const authorId = interaction.user.id;
 
 		// check if valid email and end in @myvuw.ac.nz
-		if ((role === 'student' && !/^.+@myvuw\.ac\.nz$/.test(email)) || (role === 'staff' && !/^.+@vuw\.ac\.nz$/.test(email))) {
+		if (
+			(role === 'student' && !/^([a-z0-9.]{1,31})@myvuw\.ac\.nz$/.test(email)) ||
+			(role === 'staff' && !/^([a-z0-9.]{1,31})@vuw\.ac\.nz$/.test(email))
+		) {
 			await interaction.reply({ content: 'Invalid email address. Please use your VUW email address.', ephemeral: true });
 			return;
 		}
