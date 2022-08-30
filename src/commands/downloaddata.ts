@@ -32,7 +32,8 @@ export class UserCommand extends Command {
 
 		await interaction.reply({
 			content: 'Attached is all data stored by this service for you.',
-			files: [file]
+			files: [file],
+			ephemeral: true
 		});
 	}
 }
