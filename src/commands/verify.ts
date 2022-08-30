@@ -54,6 +54,24 @@ export class UserCommand extends Command {
 			return;
 		}
 
+		// check if > 5 verification records for this email exist in the last 24 hours
+		const verificationRecords = await this.container.db.verificationRecord.findMany({
+			where: {
+				email,
+				createdAt: {
+					gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+				}
+			}
+		});
+
+		if (verificationRecords.length > 5) {
+			await interaction.reply({
+				content: 'This email has had greater then 5 verification attempts in the past 24 hours, please try again later.',
+				ephemeral: true
+			});
+			return;
+		}
+
 		// Check if user is already linked to a discord account
 		let discordLinked = await this.container.db.user.findFirst({ where: { id: authorId } });
 
