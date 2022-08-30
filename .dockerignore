@@ -1,3 +1,5 @@
-bin/
-obj/
-out/
+node_modules
+README.md
+.gitignore
+.prettierignore
+dist

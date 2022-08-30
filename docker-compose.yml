@@ -1,24 +1,37 @@
-version: "3"
+version: '3.8'
 
 services:
   db:
-    image: mysql:8.0
+    image: postgres:alpine
+    container_name: VicVerify-db
     restart: unless-stopped
-    env_file:
-      - .env
+    # dev only
+    # ports:
+    #   - '5432:5432'
     volumes:
-      - db_storage:/var/lib/mysql
-      - ./src/VerifyBot/VerifyBot/DBSchema/verifyBot.sql:/docker-entrypoint-initdb.d/verifyBot.sql
+      - db:/var/lib/postgresql/data
+    env_file:
+      - '.env'
+
+  redis:
+    image: redis:alpine
+    container_name: VicVerify-redis
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    env_file:
+      - '.env'
 
   bot:
-    image: ghcr.io/vecnz/verifybot:main
+    container_name: VicVerify
     restart: unless-stopped
+    image: ghcr.io/vecnz/verifybot:main
+    build: .
     env_file:
-      - .env
+      - '.env'
     depends_on:
       - db
-    volumes:
-      - ./verifybot_public.crt:/app/verifybot_public.crt
-volumes:
-  db_storage:
 
+volumes:
+  db:
+  redis:
