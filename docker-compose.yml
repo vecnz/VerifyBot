@@ -5,8 +5,9 @@ services:
     image: postgres:alpine
     container_name: VicVerify-db
     restart: unless-stopped
-    ports:
-      - '5432:5432'
+    # dev only
+    # ports:
+    #   - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
     env_file:
@@ -16,8 +17,6 @@ services:
     image: redis:alpine
     container_name: VicVerify-redis
     restart: unless-stopped
-    ports:
-      - '6379:6379'
     volumes:
       - redis:/data
     env_file:

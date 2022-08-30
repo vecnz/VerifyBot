@@ -15,8 +15,10 @@ export class UserCommand extends Command {
 	}
 
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
-		await interaction.reply(
-			'This is a free verification service that verified Te Herenga Waka - Victoria University of Wellington students with their Discord.\nOur privacy policy can be found [here](https://github.com/vecnz/VerifyBot/wiki/Privacy-Policy).'
-		);
+		await interaction.reply({
+			content:
+				'This is a free verification service that verified Te Herenga Waka - Victoria University of Wellington students with their Discord.\n\nOur privacy policy can be found [here](https://github.com/vecnz/VerifyBot/wiki/Privacy-Policy).',
+			ephemeral: true
+		});
 	}
 }

@@ -6,5 +6,6 @@ declare module '@skyra/env-utilities' {
 		MAIL_PORT: number;
 		MAIL_USERNAME: string;
 		MAIL_PASSWORD: string;
+		REDIS_HOST: string;
 	}
 }

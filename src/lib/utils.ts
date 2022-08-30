@@ -1,7 +1,7 @@
 import { Command, container } from '@sapphire/framework';
 import type { User } from '@prisma/client';
 import type { GuildMember } from 'discord.js';
-import { github } from './constants';
+import { github } from '#lib/constants';
 
 // add role to user in all guilds
 export function addVerifiedRoleToUser(user: User) {

@@ -60,7 +60,7 @@ export class UserCommand extends Command {
 		let msg = '';
 		if (otherUserWithEmail) {
 			msg =
-				'\nAnother user has this email. Contiuining to verify will unverify this Discord account as an email can only be associated with a single Discord account.';
+				'\nAnother user has this email. Continuing to verify will unverify this Discord account as an email can only be associated with a single Discord account.';
 		}
 
 		// check if > 5 verification records for this email exist in the last 24 hours

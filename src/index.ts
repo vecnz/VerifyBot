@@ -13,7 +13,7 @@ const client = new SapphireClient({
 		strategy: new ScheduledTaskRedisStrategy({
 			bull: {
 				connection: {
-					host: 'redis' // The host at which the redis server is found
+					host: envParseString('REDIS_HOST')
 				}
 			}
 		})

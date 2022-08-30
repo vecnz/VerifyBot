@@ -1,5 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { MessageAttachment } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	description: 'Download all data stored by this service.'
@@ -27,9 +28,11 @@ export class UserCommand extends Command {
 			verificationHistory
 		};
 
+		const file = new MessageAttachment(Buffer.from(JSON.stringify(data)), 'data.json');
+
 		await interaction.reply({
 			content: 'Attached is all data stored by this service for you.',
-			files: [{ attachment: JSON.stringify(data), name: 'data.json' }]
+			files: [file]
 		});
 	}
 }
