@@ -73,9 +73,14 @@ export class UserCommand extends Command {
 			});
 		}
 
+		// create task to run in 30 days
+		this.container.tasks.create('delete', { userId: authorId, time: Date.now() }, 2592000000);
+
+		// this.container.tasks.create('delete', { userID: authorId });
+
 		await interaction.editReply({
 			content:
-				'Your Discord account is no longer verified to your VUW account. All data related to your verification will be deleted in 1 years time if you do not re-verify.'
+				'Your Discord account is no longer verified to your VUW account. All data related to your verification will be deleted in 30 days time if you do not re-verify.'
 		});
 	}
 }

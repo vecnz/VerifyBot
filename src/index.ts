@@ -3,11 +3,21 @@ import { container, SapphireClient } from '@sapphire/framework';
 import { PrismaClient } from '@prisma/client';
 import * as nodemailer from 'nodemailer';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
+import { ScheduledTaskRedisStrategy } from '@sapphire/plugin-scheduled-tasks/register-redis';
 
 const client = new SapphireClient({
 	shards: 'auto',
 	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS']
+	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS'],
+	tasks: {
+		strategy: new ScheduledTaskRedisStrategy({
+			bull: {
+				connection: {
+					host: 'redis' // The host at which the redis server is found
+				}
+			}
+		})
+	}
 });
 
 const transporter = nodemailer.createTransport({

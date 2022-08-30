@@ -12,6 +12,17 @@ services:
     env_file:
       - '.env'
 
+  redis:
+    image: redis:alpine
+    container_name: VicVerify-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis:/data
+    env_file:
+      - '.env'
+
   bot:
     container_name: VicVerify
     restart: unless-stopped
@@ -24,3 +35,4 @@ services:
 
 volumes:
   db:
+  redis:
