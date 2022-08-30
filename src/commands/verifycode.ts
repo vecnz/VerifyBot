@@ -49,6 +49,15 @@ export class UserCommand extends Command {
 			return;
 		}
 
+		if (verificationRecord.createdAt.getTime() + 3600000 < Date.now()) {
+			await interaction.reply({
+				content:
+					'The verification process has ended as you have taken longer then 1 hour to reply. Please run `/verify` again to restart the process.',
+				ephemeral: true
+			});
+			return;
+		}
+
 		// check if the code is correct
 		if (verificationRecord.code !== code) {
 			await interaction.reply({ content: 'Invalid code. Please try again.', ephemeral: true });
