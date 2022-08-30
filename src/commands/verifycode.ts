@@ -1,6 +1,6 @@
+import { addVerifiedRoleToUser, informUserOfError, removeVerifiedRoleFromUser } from '#lib/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import type { GuildMember } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	description: 'Complete verification using the verification code.'
@@ -23,7 +23,6 @@ export class UserCommand extends Command {
 
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const code = interaction.options.getString('code', true);
-
 		const authorId = interaction.user.id;
 
 		// check if verification has started
@@ -66,45 +65,23 @@ export class UserCommand extends Command {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		interaction.client.guilds.cache.forEach(async (guild) => {
-			if (!guild.members.cache.has(authorId)) {
-				await guild.members.fetch();
-			}
-			if (guild.members.cache.has(authorId)) {
-				const verifiedRole = await this.container.db.server.findFirst({ where: { id: guild.id } });
-				let role;
-				if (user.isStudent) {
-					role = verifiedRole?.studentRole;
-				} else {
-					role = verifiedRole?.staffRole;
-				}
-				if (role) {
-					await (guild.members.cache.get(authorId) as GuildMember).roles.add(role);
-				}
-			}
-		});
-
 		// Check if another user has the same email and unverify them
 		const otherUser = await this.container.db.user.findFirst({ where: { email: verificationRecord.email } });
 		if (otherUser) {
-			interaction.client.guilds.cache.forEach(async (guild) => {
-				if (!guild.members.cache.has(otherUser.id)) {
-					await guild.members.fetch();
-				}
-				if (guild.members.cache.has(otherUser.id) && user.isStudent) {
-					const verifiedRole = await this.container.db.server.findFirst({ where: { id: guild.id } });
-					let role;
-					if (user.isStudent) {
-						role = verifiedRole?.studentRole;
-					} else {
-						role = verifiedRole?.staffRole;
-					}
+			try {
+				removeVerifiedRoleFromUser(otherUser);
+				await this.container.db.user.update({ where: { id: otherUser.id }, data: { verified: false, email: null } });
+			} catch (error) {
+				await informUserOfError(interaction, error, 'removing the verified status from the user previously verified with this email');
+				return;
+			}
+		}
 
-					if (role) {
-						await (guild.members.cache.get(otherUser.id) as GuildMember).roles.remove(role);
-					}
-				}
-			});
+		// add verified role
+		try {
+			addVerifiedRoleToUser(user);
+		} catch (error) {
+			await informUserOfError(interaction, error, 'adding the verified role to you');
 		}
 
 		// add user to the db

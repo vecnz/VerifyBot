@@ -1,4 +1,5 @@
-import { github, verifyMsg } from '#lib/constants';
+import { verifyMsg } from '#lib/constants';
+import { informUserOfError } from '#lib/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 
@@ -54,6 +55,14 @@ export class UserCommand extends Command {
 			return;
 		}
 
+		// check if another user has this email
+		const otherUserWithEmail = await this.container.db.user.findFirst({ where: { email } });
+		let msg = '';
+		if (otherUserWithEmail) {
+			msg =
+				'\nAnother user has this email. Contiuining to verify will unverify this Discord account as an email can only be associated with a single Discord account.';
+		}
+
 		// check if > 5 verification records for this email exist in the last 24 hours
 		const verificationRecords = await this.container.db.verificationRecord.findMany({
 			where: {
@@ -107,15 +116,11 @@ export class UserCommand extends Command {
 				html: verifyMsg(code)
 			});
 		} catch (error) {
-			this.container.logger.error(error);
-			await interaction.reply({
-				content: `There was an error sending the verification email. If this problem persists please raise an issue at our github: ${github}`,
-				ephemeral: true
-			});
+			await informUserOfError(interaction, error, 'sending you the verification email');
 			return;
 		}
 
 		// Reply to user saying verification email has been sent
-		await interaction.reply({ content: `Verification email sent to ${email}.`, ephemeral: true });
+		await interaction.reply({ content: `Verification email sent to ${email}.${msg}`, ephemeral: true });
 	}
 }

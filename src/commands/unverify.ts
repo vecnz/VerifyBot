@@ -1,6 +1,6 @@
+import { informUserOfError, removeVerifiedRoleFromUser } from '#lib/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import type { GuildMember } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	description: 'Unlink and unverify your discord acocunt.'
@@ -28,25 +28,12 @@ export class UserCommand extends Command {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		// add verified role to all shared servers
-		interaction.client.guilds.cache.forEach(async (guild) => {
-			if (!guild.members.cache.has(authorId)) {
-				await guild.members.fetch();
-			}
-			if (guild.members.cache.has(authorId) && user.isStudent) {
-				const verifiedRole = await this.container.db.server.findFirst({ where: { id: guild.id } });
-				let role;
-				if (user.isStudent) {
-					role = verifiedRole?.studentRole;
-				} else {
-					role = verifiedRole?.staffRole;
-				}
-
-				if (role) {
-					await (guild.members.cache.get(authorId) as GuildMember).roles.remove(role);
-				}
-			}
-		});
+		try {
+			removeVerifiedRoleFromUser(user);
+		} catch (error) {
+			await informUserOfError(interaction, error, 'attempting to unverify you');
+			return;
+		}
 
 		// remove email from user and set to unverified
 		await this.container.db.user.update({
@@ -60,7 +47,7 @@ export class UserCommand extends Command {
 			}
 		});
 
-		// remove latest verification attempt
+		// remove latest verification attempt if it is not completed
 		const verificationRecord = (await this.container.db.verificationRecord.findMany({ where: { userId: authorId } })).sort(
 			(a, b) => b.createdAt.getTime() - a.createdAt.getTime()
 		)[0];
@@ -73,7 +60,7 @@ export class UserCommand extends Command {
 			});
 		}
 
-		// create task to run in 30 days
+		// create task to run in 30 days to delete all data
 		this.container.tasks.create('delete', { userId: authorId, time: Date.now() }, 2592000000);
 
 		// this.container.tasks.create('delete', { userID: authorId });

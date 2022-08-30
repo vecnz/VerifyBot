@@ -17,7 +17,6 @@ export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const authorId = interaction.user.id;
 
-		// get user
 		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
 
 		// get all verification history linked to this user

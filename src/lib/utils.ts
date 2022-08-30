@@ -1,43 +1,61 @@
-import type { ChatInputCommandSuccessPayload, Command, ContextMenuCommandSuccessPayload, MessageCommandSuccessPayload } from '@sapphire/framework';
-import { container } from '@sapphire/framework';
-import { cyan } from 'colorette';
-import type { APIUser } from 'discord-api-types/v9';
-import type { Guild, User } from 'discord.js';
+import { Command, container } from '@sapphire/framework';
+import type { User } from '@prisma/client';
+import type { GuildMember } from 'discord.js';
+import { github } from './constants';
 
-export function logSuccessCommand(payload: ContextMenuCommandSuccessPayload | ChatInputCommandSuccessPayload | MessageCommandSuccessPayload): void {
-	let successLoggerData: ReturnType<typeof getSuccessLoggerData>;
-
-	if ('interaction' in payload) {
-		successLoggerData = getSuccessLoggerData(payload.interaction.guild, payload.interaction.user, payload.command);
-	} else {
-		successLoggerData = getSuccessLoggerData(payload.message.guild, payload.message.author, payload.command);
-	}
-
-	container.logger.debug(`${successLoggerData.shard} - ${successLoggerData.commandName} ${successLoggerData.author} ${successLoggerData.sentAt}`);
+// add role to user in all guilds
+export function addVerifiedRoleToUser(user: User) {
+	container.client.guilds.cache.forEach(async (guild) => {
+		if (!guild.members.cache.has(user.id)) {
+			await guild.members.fetch();
+		}
+		if (guild.members.cache.has(user.id)) {
+			const verifiedRole = await container.db.server.findFirst({ where: { id: guild.id } });
+			let role;
+			if (user.isStudent) {
+				role = verifiedRole?.studentRole;
+			} else {
+				role = verifiedRole?.staffRole;
+			}
+			if (role) {
+				try {
+					await (guild.members.cache.get(user.id) as GuildMember).roles.add(role);
+				} catch (error) {
+					container.logger.error(error);
+				}
+			}
+		}
+	});
 }
 
-export function getSuccessLoggerData(guild: Guild | null, user: User, command: Command) {
-	const shard = getShardInfo(guild?.shardId ?? 0);
-	const commandName = getCommandInfo(command);
-	const author = getAuthorInfo(user);
-	const sentAt = getGuildInfo(guild);
-
-	return { shard, commandName, author, sentAt };
+export function removeVerifiedRoleFromUser(user: User) {
+	container.client.guilds.cache.forEach(async (guild) => {
+		if (!guild.members.cache.has(user.id)) {
+			await guild.members.fetch();
+		}
+		if (guild.members.cache.has(user.id)) {
+			const verifiedRole = await container.db.server.findFirst({ where: { id: guild.id } });
+			let role;
+			if (user.isStudent) {
+				role = verifiedRole?.studentRole;
+			} else {
+				role = verifiedRole?.staffRole;
+			}
+			if (role) {
+				try {
+					await (guild.members.cache.get(user.id) as GuildMember).roles.remove(role);
+				} catch (error) {
+					container.logger.error(error);
+				}
+			}
+		}
+	});
 }
 
-function getShardInfo(id: number) {
-	return `[${cyan(id.toString())}]`;
-}
-
-function getCommandInfo(command: Command) {
-	return cyan(command.name);
-}
-
-function getAuthorInfo(author: User | APIUser) {
-	return `${author.username}[${cyan(author.id)}]`;
-}
-
-function getGuildInfo(guild: Guild | null) {
-	if (guild === null) return 'Direct Messages';
-	return `${guild.name}[${cyan(guild.id)}]`;
+export async function informUserOfError(interaction: Command.ChatInputInteraction, error: unknown, action: string) {
+	container.logger.error(error);
+	await interaction.reply({
+		content: `An error has occurred while ${action}. If this problem persists please raise an issue at our github: ${github}`,
+		ephemeral: true
+	});
 }
