@@ -75,6 +75,29 @@ export class UserCommand extends Command {
 			}
 		});
 
+		// Check if another user has the same email and unverify them
+		const otherUser = await this.container.db.user.findFirst({ where: { email: verificationRecord.email } });
+		if (otherUser) {
+			interaction.client.guilds.cache.forEach(async (guild) => {
+				if (!guild.members.cache.has(otherUser.id)) {
+					await guild.members.fetch();
+				}
+				if (guild.members.cache.has(otherUser.id) && user.isStudent) {
+					const verifiedRole = await this.container.db.server.findFirst({ where: { id: guild.id } });
+					let role;
+					if (user.isStudent) {
+						role = verifiedRole?.studentRole;
+					} else {
+						role = verifiedRole?.staffRole;
+					}
+
+					if (role) {
+						await (guild.members.cache.get(otherUser.id) as GuildMember).roles.remove(role);
+					}
+				}
+			});
+		}
+
 		// add user to the db
 		await this.container.db.user.update({
 			where: { id: authorId },
