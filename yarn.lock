@@ -945,7 +945,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ioredis@npm:^4.28.10":
+"@types/ioredis@npm:4.28.10":
   version: 4.28.10
   resolution: "@types/ioredis@npm:4.28.10"
   dependencies:
@@ -1318,7 +1318,7 @@ __metadata:
     "@skyra/env-utilities": ^1.0.2
     "@swc/core": 1.2.244
     "@types/eslint": 8.4.6
-    "@types/ioredis": ^4.28.10
+    "@types/ioredis": 4.28.10
     "@types/node": 18.7.13
     "@types/nodemailer": 6.4.5
     "@types/ws": 8.5.3
