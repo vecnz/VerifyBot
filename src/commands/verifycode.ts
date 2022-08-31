@@ -26,7 +26,7 @@ export class UserCommand extends Command {
 		const authorId = interaction.user.id;
 
 		// check if verification has started
-		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
+		let user = await this.container.db.user.findFirst({ where: { id: authorId } });
 		const verificationRecord = (await this.container.db.verificationRecord.findMany({ where: { userId: authorId } })).sort(
 			(a, b) => b.createdAt.getTime() - a.createdAt.getTime()
 		)[0];
@@ -78,14 +78,9 @@ export class UserCommand extends Command {
 		}
 
 		// add verified role
-		try {
-			addVerifiedRoleToUser(user);
-		} catch (error) {
-			await informUserOfError(interaction, error, 'adding the verified role to you');
-		}
 
 		// add user to the db
-		await this.container.db.user.update({
+		user = await this.container.db.user.update({
 			where: { id: authorId },
 			data: {
 				verified: true,
@@ -101,6 +96,12 @@ export class UserCommand extends Command {
 				completed: true
 			}
 		});
+
+		try {
+			addVerifiedRoleToUser(user);
+		} catch (error) {
+			await informUserOfError(interaction, error, 'adding the verified role to you');
+		}
 
 		await interaction.editReply({ content: 'You are now verified across all servers using VicVerify.' });
 	}

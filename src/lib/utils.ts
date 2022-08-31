@@ -5,6 +5,9 @@ import { github } from '#lib/constants';
 
 // add role to user in all guilds
 export function addVerifiedRoleToUser(user: User) {
+	if (!user.verified) {
+		return;
+	}
 	container.client.guilds.cache.forEach(async (guild) => {
 		if (!guild.members.cache.has(user.id)) {
 			await guild.members.fetch();
@@ -29,6 +32,9 @@ export function addVerifiedRoleToUser(user: User) {
 }
 
 export function removeVerifiedRoleFromUser(user: User) {
+	if (user.verified) {
+		return;
+	}
 	container.client.guilds.cache.forEach(async (guild) => {
 		if (!guild.members.cache.has(user.id)) {
 			await guild.members.fetch();

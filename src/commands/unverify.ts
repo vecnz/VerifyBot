@@ -19,7 +19,7 @@ export class UserCommand extends Command {
 		const authorId = interaction.user.id;
 
 		// get user
-		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
+		let user = await this.container.db.user.findFirst({ where: { id: authorId } });
 
 		if (!user) {
 			await interaction.reply({ content: 'You are not in the system.', ephemeral: true });
@@ -28,15 +28,8 @@ export class UserCommand extends Command {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		try {
-			removeVerifiedRoleFromUser(user);
-		} catch (error) {
-			await informUserOfError(interaction, error, 'attempting to unverify you');
-			return;
-		}
-
 		// remove email from user and set to unverified
-		await this.container.db.user.update({
+		user = await this.container.db.user.update({
 			data: {
 				verified: false,
 				email: null,
@@ -58,6 +51,13 @@ export class UserCommand extends Command {
 					id: verificationRecord.id
 				}
 			});
+		}
+
+		try {
+			removeVerifiedRoleFromUser(user);
+		} catch (error) {
+			await informUserOfError(interaction, error, 'attempting to unverify you');
+			return;
 		}
 
 		// create task to run in 30 days to delete all data
