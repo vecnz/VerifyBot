@@ -15,6 +15,17 @@
         "maintenance",
         "security"
       ]
+    },
+    {
+      "login": "Darkflame72",
+      "name": "Leon Bowie",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31436575?v=4",
+      "profile": "http://darkflame.dev",
+      "contributions": [
+        "maintenance",
+        "code",
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,
