@@ -57,6 +57,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/BIOS9"><img src="https://avatars.githubusercontent.com/u/15035908?v=4?s=100" width="100px;" alt=""/><br /><sub><b>NightFish</b></sub></a><br /><a href="https://github.com/vecnz/VerifyBot/commits?author=BIOS9" title="Code">💻</a> <a href="#maintenance-BIOS9" title="Maintenance">🚧</a> <a href="#security-BIOS9" title="Security">🛡️</a></td>
+    <td align="center"><a href="http://darkflame.dev"><img src="https://avatars.githubusercontent.com/u/31436575?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Leon Bowie</b></sub></a><br /><a href="#maintenance-Darkflame72" title="Maintenance">🚧</a> <a href="https://github.com/vecnz/VerifyBot/commits?author=Darkflame72" title="Code">💻</a> <a href="#infra-Darkflame72" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
   </tr>
 </table>
 
