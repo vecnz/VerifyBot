@@ -1,9 +1,7 @@
 # VicVerify
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg)](#contributors-) [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/vecnz/VerifyBot/blob/main/CODE_OF_CONDUCT.md) ![GitHub](https://img.shields.io/github/license/vecnz/VerifyBot)
 
-Discord verification system for Te Herenga Waka - Victoria University of Wellington.
+Discord verification system for Te Herenga Waka - Victoria University of Wellington. You can invite it [here](https://canary.discord.com/api/oauth2/authorize?client_id=953504345800982598&permissions=268435460&scope=applications.commands%20bot).
 
 ## About
 This is a Discord bot that handles verification between Discord accounts and Vic uni accounts. It has the ability to verify students and staff separately and assign roles based on the verification. It is designed to be used by both university clubs and official course servers providing a painless and seamless verification system. This system was designed with privacy in mind with the Victoria Engineering Club not having access to any data and all processes are fully automated.
