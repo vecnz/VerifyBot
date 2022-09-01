@@ -45,7 +45,11 @@ export class UserCommand extends Command {
 			(role === 'student' && !/^([a-z0-9.-]{1,31})@myvuw\.ac\.nz$/.test(email)) ||
 			(role === 'staff' && !/^([a-z0-9.-]{1,31})@vuw\.ac\.nz$/.test(email))
 		) {
-			await interaction.reply({ content: 'Invalid email address. Please use your VUW email address.', ephemeral: true });
+			await interaction.reply({
+				content:
+					'Invalid email address. Please use your myvuw email for student verification and vuw email for staff, any other emails such as ecs are not valid.',
+				ephemeral: true
+			});
 			return;
 		}
 
