@@ -8,7 +8,7 @@ import { ScheduledTaskRedisStrategy } from '@sapphire/plugin-scheduled-tasks/reg
 const client = new SapphireClient({
 	shards: 'auto',
 	partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS'],
+	intents: ['GUILDS', 'GUILD_MEMBERS'],
 	tasks: {
 		strategy: new ScheduledTaskRedisStrategy({
 			bull: {
