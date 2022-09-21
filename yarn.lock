@@ -1342,7 +1342,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.37.0
     "@typescript-eslint/parser": 5.37.0
     bull: ^4.8.5
-    bullmq: ^1.90.0
+    bullmq: ^2.0.0
     colorette: ^2.0.19
     discord-api-types: ^0.37.5
     discord.js: ^13.10.3
@@ -1666,9 +1666,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bullmq@npm:^1.90.0":
-  version: 1.90.0
-  resolution: "bullmq@npm:1.90.0"
+"bullmq@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "bullmq@npm:2.0.1"
   dependencies:
     cron-parser: ^4.6.0
     get-port: 6.1.2
@@ -1678,8 +1678,8 @@ __metadata:
     msgpackr: ^1.6.2
     semver: ^7.3.7
     tslib: ^2.0.0
-    uuid: ^8.3.2
-  checksum: d1659fe4d596a9f95dffcc0c084b8a8e76757f112c0b143ce1cdd0a6431cf18053581238956ea217ab2d0b0ed4b73439fc24f7ce944adbefa37d5b8fc36a9efd
+    uuid: ^9.0.0
+  checksum: 2d5790068f175f47cf80b9b3e6187f38d7c8c2db1b5332b3a372b8b59db072fd50bb20b6ceb0a70805cae24899a29b0ac22119846b3519b97df46c67ca2bdc86
   languageName: node
   linkType: hard
 
@@ -6149,12 +6149,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.3.0, uuid@npm:^8.3.2":
+"uuid@npm:^8.3.0":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "uuid@npm:9.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
   languageName: node
   linkType: hard
 
