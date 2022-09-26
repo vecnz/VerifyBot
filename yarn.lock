@@ -626,13 +626,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/plugin-scheduled-tasks@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@sapphire/plugin-scheduled-tasks@npm:4.0.0"
+"@sapphire/plugin-scheduled-tasks@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@sapphire/plugin-scheduled-tasks@npm:5.0.0"
   dependencies:
-    "@sapphire/time-utilities": ^1.7.6
+    "@sapphire/stopwatch": ^1.4.1
+    "@sapphire/utilities": ^3.9.3
     tslib: ^2.4.0
-  checksum: addb8856842ec024c5d8bb3889c99f350aa26dc0fe3ad5ff6076c3fa36cffd1d37127b5432c885e85fe181540fd2e7e2f1172c63e4a70a567c36e261a9a42eb6
+  checksum: cd1ff4a3494f0236b6f25025342fac0f66f6c1767fa06206bc50d5e972f2e390c964daffbe4a7e91e29f16d12c560640803807ef25733a9d9f630aec14f76eda
   languageName: node
   linkType: hard
 
@@ -724,6 +725,13 @@ __metadata:
   version: 3.9.2
   resolution: "@sapphire/utilities@npm:3.9.2"
   checksum: eeef33b03b802e931ada752b8c335cc8bde4017f8029b577b0247e3f3d2b57bf5f1936b2c8c29aef5e2c6975d9b162363e4c5c434c4fead0bba74253d067b4d9
+  languageName: node
+  linkType: hard
+
+"@sapphire/utilities@npm:^3.9.3":
+  version: 3.9.3
+  resolution: "@sapphire/utilities@npm:3.9.3"
+  checksum: 9f3f977fd5c0677d5f79136e9cb68ade3317cfba3e87bb58689f4af68233a807af34eb6092ad262c946d5eaf5c4a76cd534b0b395ebbaf0f0912dd80e174f912
   languageName: node
   linkType: hard
 
@@ -1324,7 +1332,7 @@ __metadata:
     "@sapphire/framework": ^3.1.0
     "@sapphire/plugin-editable-commands": ^2.0.0
     "@sapphire/plugin-logger": ^3.0.0
-    "@sapphire/plugin-scheduled-tasks": ^4.0.0
+    "@sapphire/plugin-scheduled-tasks": ^5.0.0
     "@sapphire/plugin-subcommands": ^3.1.1
     "@sapphire/prettier-config": 1.4.4
     "@sapphire/time-utilities": ^1.7.6

@@ -32,7 +32,7 @@
 		"@sapphire/framework": "^3.1.0",
 		"@sapphire/plugin-editable-commands": "^2.0.0",
 		"@sapphire/plugin-logger": "^3.0.0",
-		"@sapphire/plugin-scheduled-tasks": "^4.0.0",
+		"@sapphire/plugin-scheduled-tasks": "^5.0.0",
 		"@sapphire/plugin-subcommands": "^3.1.1",
 		"@sapphire/time-utilities": "^1.7.6",
 		"@sapphire/type": "^2.2.4",
