@@ -2,6 +2,7 @@ import { verifyMsg } from '#lib/constants';
 import { informUserOfError } from '#lib/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { randomBytes } from 'crypto';
 
 @ApplyOptions<Command.Options>({
 	description: 'Verify your Discord account using you VUW email address.'
@@ -109,7 +110,7 @@ export class UserCommand extends Command {
 		let discordLinked = await this.container.db.user.findFirst({ where: { id: authorId } });
 
 		// Generate verification code (6 char alpha numeric)
-		const code = Math.random().toString(36).split('').slice(2, 8).join('');
+		const code = randomBytes(3).toString('hex');
 
 		// create user if it doesn't already exist
 		if (!discordLinked) {
