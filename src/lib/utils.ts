@@ -1,6 +1,5 @@
 import { Command, container } from '@sapphire/framework';
 import type { User } from '@prisma/client';
-import type { GuildMember } from 'discord.js';
 import { github } from '#lib/constants';
 
 // add role to user in all guilds
@@ -22,7 +21,26 @@ export function addVerifiedRoleToUser(user: User) {
 			}
 			if (role) {
 				try {
-					await (guild.members.cache.get(user.id) as GuildMember).roles.add(role);
+					// check if we have permission to add roles
+					if (guild.me?.permissions.has('MANAGE_ROLES')) {
+						// check if the role exists
+						if (guild.roles.cache.has(role)) {
+							// check if role is below our highest role
+							if (guild.me.roles.highest.comparePositionTo(role) > 0) {
+								// check if user already has role
+								if (!guild.members.cache.get(user.id)?.roles.cache.has(role)) {
+									// add role
+									await guild.members.cache.get(user.id)?.roles.add(role);
+								}
+							} else {
+								container.logger.warn(`Role ${role} is above my highest role in guild ${guild.name} (${guild.id})`);
+							}
+						} else {
+							container.logger.warn(`Role ${role} does not exist in guild ${guild.name}`);
+						}
+					} else {
+						container.logger.warn(`Missing permissions to add roles in guild ${guild.name} (${guild.id})`);
+					}
 				} catch (error) {
 					container.logger.error(error);
 				}
@@ -49,7 +67,26 @@ export function removeVerifiedRoleFromUser(user: User) {
 			}
 			if (role) {
 				try {
-					await (guild.members.cache.get(user.id) as GuildMember).roles.remove(role);
+					// check if we have permission to remove roles
+					if (guild.me?.permissions.has('MANAGE_ROLES')) {
+						// check if the role exists
+						if (guild.roles.cache.has(role)) {
+							// check if role is below our highest role
+							if (guild.me.roles.highest.comparePositionTo(role) > 0) {
+								// check if user already has role
+								if (guild.members.cache.get(user.id)?.roles.cache.has(role)) {
+									// remove role
+									await guild.members.cache.get(user.id)?.roles.remove(role);
+								}
+							} else {
+								container.logger.warn(`Role ${role} is above my highest role in guild ${guild.name} (${guild.id})`);
+							}
+						} else {
+							container.logger.warn(`Role ${role} does not exist in guild ${guild.name}`);
+						}
+					} else {
+						container.logger.warn(`Missing permissions to remove roles in guild ${guild.name} (${guild.id})`);
+					}
 				} catch (error) {
 					container.logger.error(error);
 				}
