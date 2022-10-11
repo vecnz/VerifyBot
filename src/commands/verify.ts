@@ -88,6 +88,23 @@ export class UserCommand extends Command {
 			return;
 		}
 
+		const userVerificationRecords = await this.container.db.verificationRecord.findMany({
+			where: {
+				userId: authorId,
+				createdAt: {
+					gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+				}
+			}
+		});
+
+		if (userVerificationRecords.length > 5) {
+			await interaction.reply({
+				content: 'You have had greater then 5 verification attempts in the past 24 hours, please try again later.',
+				ephemeral: true
+			});
+			return;
+		}
+
 		// Check if user is already linked to a discord account
 		let discordLinked = await this.container.db.user.findFirst({ where: { id: authorId } });
 
