@@ -13,7 +13,7 @@ export class GuildBanAdd extends Listener {
 			}
 		});
 
-		// if the user is verified
+		// if the user is not verified
 		if (!verifiedUser || !verifiedUser.verified || !verifiedUser.email) return;
 
 		// get the server from the ban
