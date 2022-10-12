@@ -23,6 +23,11 @@ export class UserCommand extends Command {
 		// get all verification history linked to this user
 		const verificationHistory = await this.container.db.verificationRecord.findMany({ where: { userId: authorId } });
 
+		// remove the verification code from the history
+		verificationHistory.forEach((record) => {
+			record.code = 'REDACTED';
+		});
+
 		const data = {
 			user,
 			verificationHistory
