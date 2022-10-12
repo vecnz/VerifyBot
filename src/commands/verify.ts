@@ -54,21 +54,19 @@ export class UserCommand extends Command {
 			return;
 		}
 
-		// check if user is already verified
-		const emailLinked = await this.container.db.user.findFirst({ where: { email } });
-
-		// Needs to be expanded on to add checks if the user is verified as that email and provide a way to move verification to a new discord
-		if (emailLinked && emailLinked.verified) {
-			await interaction.reply({ content: 'This email is already verified email.', ephemeral: true });
+		const otherUserWithEmail = await this.container.db.user.findFirst({ where: { email, verified: true } });
+		if (otherUserWithEmail && otherUserWithEmail.id === authorId) {
+			await interaction.reply({
+				content: 'You are already verified with this email.',
+				ephemeral: true
+			});
 			return;
 		}
 
-		// check if another user has this email
-		const otherUserWithEmail = await this.container.db.user.findFirst({ where: { email } });
 		let msg = '';
-		if (otherUserWithEmail) {
+		if (otherUserWithEmail && otherUserWithEmail.id !== authorId) {
 			msg =
-				'\nAnother user has this email. Continuing to verify will unverify this Discord account as an email can only be associated with a single Discord account.';
+				'\nAnother user has this email. Continuing to verify will unverify their Discord account as an email can only be associated with a single Discord account.';
 		}
 
 		// check if > 5 verification records for this email exist in the last 24 hours
