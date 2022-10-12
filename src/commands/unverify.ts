@@ -66,7 +66,7 @@ export class UserCommand extends Command {
 		}
 
 		// create task to run in 30 days to delete all data
-		// this.container.tasks.create('delete', { userId: authorId, time: Date.now() }, 1000 * 60 * 60 * 24 * 30);
+		this.container.tasks.create('delete', { userId: authorId, time: Date.now() }, 1000 * 60 * 60 * 24 * 30);
 
 		await interaction.editReply({
 			content:
