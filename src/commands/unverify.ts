@@ -19,17 +19,22 @@ export class UserCommand extends Command {
 		const authorId = interaction.user.id;
 
 		// get user
-		let user = await this.container.db.user.findFirst({ where: { id: authorId } });
+		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
 
 		if (!user) {
 			await interaction.reply({ content: 'You are not in the system.', ephemeral: true });
 			return;
 		}
 
+		if (!user.verified) {
+			await interaction.reply({ content: 'You are not verified.', ephemeral: true });
+			return;
+		}
+
 		await interaction.deferReply({ ephemeral: true });
 
 		// remove email from user and set to unverified
-		user = await this.container.db.user.update({
+		await this.container.db.user.update({
 			data: {
 				verified: false,
 				email: null,
