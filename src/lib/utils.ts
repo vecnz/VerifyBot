@@ -60,7 +60,7 @@ export async function addVerifiedRoleToUser(user: User) {
 }
 
 export function removeVerifiedRoleFromUser(user: User) {
-	if (user.verified) {
+	if (!user.verified) {
 		return;
 	}
 	container.client.guilds.cache.forEach(async (guild) => {
@@ -75,6 +75,7 @@ export function removeVerifiedRoleFromUser(user: User) {
 			} else {
 				role = verifiedRole?.staffRole;
 			}
+
 			if (role) {
 				try {
 					// check if we have permission to remove roles

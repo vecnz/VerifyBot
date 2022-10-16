@@ -37,7 +37,7 @@ export class UserCommand extends Command {
 		}
 
 		if (verificationRecord.completed) {
-			if (user.verified) {
+			if (!user.verified) {
 				await interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
 				return;
 			}
@@ -59,6 +59,7 @@ export class UserCommand extends Command {
 
 		// check if the code is correct
 		if (verificationRecord.code !== code) {
+			this.container.logger.info(`Verification failed for user ${authorId} with code ${code} should be ${verificationRecord.code}`);
 			await interaction.reply({ content: 'Invalid code. Please try again.', ephemeral: true });
 			return;
 		}
