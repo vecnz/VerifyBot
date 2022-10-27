@@ -1,5 +1,5 @@
 # Install the following packages:
-FROM node:18 as base
+FROM node:19 as base
 
 WORKDIR /usr/src/app
 
