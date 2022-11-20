@@ -23,6 +23,27 @@ export class GuildMemberAdd extends Listener {
 			return;
 		}
 
+		// check email in bans
+		const ban = await this.container.db.ban.findFirst({
+			where: {
+				email: user.email as string,
+				server: {
+					id: member.guild.id
+				}
+			}
+		});
+
+		if (ban) {
+			// ban the user
+			try {
+				await member.send(
+					`Kia ora ${member.user.username}, you have been banned from this server by your linked email, please contact a moderator or admin of the server.`
+				);
+			} catch (error) {}
+			await member.ban({ reason: ban.reason });
+			return;
+		}
+
 		// get the server settings
 		const server = (await this.container.db.server.findFirst({
 			where: {

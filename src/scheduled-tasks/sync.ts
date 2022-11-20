@@ -13,6 +13,14 @@ export class SyncTask extends ScheduledTask {
 		const servers = await this.container.db.server.findMany();
 
 		servers.forEach(async (server) => {
+			// get bans for the server
+			const bans = await this.container.db.ban.findMany({
+				where: {
+					server: {
+						id: server.id
+					}
+				}
+			});
 			// get all users in the server
 			const users = await this.container.client.guilds.cache.get(server.id)?.members.fetch();
 			if (!users) {
@@ -27,16 +35,20 @@ export class SyncTask extends ScheduledTask {
 			unverifiedUsers.forEach(async (user) => {
 				// check if user in db
 				const dbUser = await this.container.db.user.findFirst({ where: { id: user.id } });
-				if (!dbUser) {
+				if (!dbUser || !dbUser.email) {
 					return;
 				}
 
-				// check if user is verified
-				if (dbUser.verified) {
-					if (dbUser.isStudent) {
-						await user.roles.add(server.studentRole);
-					} else {
-						await user.roles.add(server.staffRole);
+				// check if user is banned
+				const ban = bans.find((ban) => ban.email === dbUser.email);
+				if (!ban) {
+					// check if user is verified
+					if (dbUser.verified) {
+						if (dbUser.isStudent) {
+							await user.roles.add(server.studentRole);
+						} else {
+							await user.roles.add(server.staffRole);
+						}
 					}
 				}
 			});
