@@ -4,7 +4,7 @@ export class SyncTask extends ScheduledTask {
 	public constructor(context: ScheduledTask.Context, options: ScheduledTask.Options) {
 		super(context, {
 			...options,
-			cron: '0 0 * * *'
+			pattern: '0 0 * * *'
 		});
 	}
 
