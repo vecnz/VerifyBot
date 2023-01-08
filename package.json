@@ -27,7 +27,7 @@
 		"@prisma/client": "4.8.1",
 		"@sapphire/decorators": "^5.0.0",
 		"@sapphire/discord-utilities": "^2.12.0",
-		"@sapphire/discord.js-utilities": "^5.1.2",
+		"@sapphire/discord.js-utilities": "^6.0.0",
 		"@sapphire/fetch": "^2.4.1",
 		"@sapphire/framework": "^3.1.4",
 		"@sapphire/plugin-editable-commands": "^2.0.1",
