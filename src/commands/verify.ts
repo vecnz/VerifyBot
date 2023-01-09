@@ -35,7 +35,7 @@ export class UserCommand extends Command {
 			);
 	}
 
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const email = interaction.options.getString('email', true);
 		const role = interaction.options.getString('role', true) as 'student' | 'staff';
 

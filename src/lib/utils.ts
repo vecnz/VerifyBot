@@ -31,11 +31,11 @@ export async function addVerifiedRoleToUser(user: User) {
 				if (role) {
 					try {
 						// check if we have permission to add roles
-						if (guild.me?.permissions.has('MANAGE_ROLES')) {
+						if (guild.members.me?.permissions.has('ManageRoles')) {
 							// check if the role exists
 							if (guild.roles.cache.has(role)) {
 								// check if role is below our highest role
-								if (guild.me.roles.highest.comparePositionTo(role) > 0) {
+								if (guild.members.me.roles.highest.comparePositionTo(role) > 0) {
 									// check if user already has role
 									if (!guild.members.cache.get(user.id)?.roles.cache.has(role)) {
 										// add role
@@ -79,11 +79,11 @@ export function removeVerifiedRoleFromUser(user: User) {
 			if (role) {
 				try {
 					// check if we have permission to remove roles
-					if (guild.me?.permissions.has('MANAGE_ROLES')) {
+					if (guild.members.me?.permissions.has('ManageRoles')) {
 						// check if the role exists
 						if (guild.roles.cache.has(role)) {
 							// check if role is below our highest role
-							if (guild.me.roles.highest.comparePositionTo(role) > 0) {
+							if (guild.members.me.roles.highest.comparePositionTo(role) > 0) {
 								// check if user already has role
 								if (guild.members.cache.get(user.id)?.roles.cache.has(role)) {
 									// remove role
@@ -106,7 +106,7 @@ export function removeVerifiedRoleFromUser(user: User) {
 	});
 }
 
-export async function informUserOfError(interaction: Command.ChatInputInteraction, error: unknown, action: string) {
+export async function informUserOfError(interaction: Command.ChatInputCommandInteraction, error: unknown, action: string) {
 	container.logger.error(error);
 	await interaction.reply({
 		content: `An error has occurred while ${action}. If this problem persists please raise an issue at our github: ${github}`,

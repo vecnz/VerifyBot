@@ -15,7 +15,7 @@ export class UserCommand extends Command {
 			);
 	}
 
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const authorId = interaction.user.id;
 
 		// get user

@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import { MessageAttachment } from 'discord.js';
+import { AttachmentBuilder } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	description: 'Download all data stored by this service.'
@@ -15,7 +15,7 @@ export class UserCommand extends Command {
 			);
 	}
 
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
 		const authorId = interaction.user.id;
 
 		const user = await this.container.db.user.findFirst({ where: { id: authorId } });
@@ -33,7 +33,7 @@ export class UserCommand extends Command {
 			verificationHistory
 		};
 
-		const file = new MessageAttachment(Buffer.from(JSON.stringify(data)), 'data.json');
+		const file = new AttachmentBuilder(Buffer.from(JSON.stringify(data)), { name: 'data.json' });
 
 		await interaction.reply({
 			content: 'Attached is all data stored by this service for you.',
