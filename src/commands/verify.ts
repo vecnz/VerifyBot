@@ -54,11 +54,12 @@ export class UserCommand extends Command {
 			return;
 		}
 
+		await interaction.deferReply({ ephemeral: true });
+
 		const otherUserWithEmail = await this.container.db.user.findFirst({ where: { email, verified: true } });
 		if (otherUserWithEmail && otherUserWithEmail.id === authorId) {
-			await interaction.reply({
-				content: 'You are already verified with this email.',
-				ephemeral: true
+			await interaction.editReply({
+				content: 'You are already verified with this email.'
 			});
 			return;
 		}
@@ -80,9 +81,8 @@ export class UserCommand extends Command {
 		});
 
 		if (verificationRecords.length > 5) {
-			await interaction.reply({
-				content: 'This email has had greater then 5 verification attempts in the past 24 hours, please try again later.',
-				ephemeral: true
+			await interaction.editReply({
+				content: 'This email has had greater then 5 verification attempts in the past 24 hours, please try again later.'
 			});
 			return;
 		}
@@ -97,9 +97,8 @@ export class UserCommand extends Command {
 		});
 
 		if (userVerificationRecords.length > 5) {
-			await interaction.reply({
-				content: 'You have had greater then 5 verification attempts in the past 24 hours, please try again later.',
-				ephemeral: true
+			await interaction.editReply({
+				content: 'You have had greater then 5 verification attempts in the past 24 hours, please try again later.'
 			});
 			return;
 		}
@@ -144,6 +143,6 @@ export class UserCommand extends Command {
 		}
 
 		// Reply to user saying verification email has been sent
-		await interaction.reply({ content: `Verification email sent to ${email}.${msg}`, ephemeral: true });
+		await interaction.editReply({ content: `Verification email sent to ${email}.${msg}` });
 	}
 }
