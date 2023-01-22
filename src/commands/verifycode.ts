@@ -25,6 +25,8 @@ export class UserCommand extends Command {
 		const code = interaction.options.getString('code', true);
 		const authorId = interaction.user.id;
 
+		await interaction.deferReply({ ephemeral: true });
+
 		// check if verification has started
 		let user = await this.container.db.user.findFirst({ where: { id: authorId } });
 		const verificationRecord = (await this.container.db.verificationRecord.findMany({ where: { userId: authorId } })).sort(
@@ -32,27 +34,25 @@ export class UserCommand extends Command {
 		)[0];
 
 		if (!user || !verificationRecord) {
-			await interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
+			await interaction.editReply({ content: 'You have not started verification. Please run the /verify command.' });
 			return;
 		}
 
 		if (verificationRecord.completed) {
 			if (!user.verified) {
-				await interaction.reply({ content: 'You have not started verification. Please run the /verify command.', ephemeral: true });
+				await interaction.editReply({ content: 'You have not started verification. Please run the /verify command.' });
 				return;
 			}
-			await interaction.reply({
-				content: 'You have already completed verification. If you wish to re-verify please run `/verify`',
-				ephemeral: true
+			await interaction.editReply({
+				content: 'You have already completed verification. If you wish to re-verify please run `/verify`'
 			});
 			return;
 		}
 
 		if (verificationRecord.createdAt.getTime() + 3600000 < Date.now()) {
-			await interaction.reply({
+			await interaction.editReply({
 				content:
-					'The verification process has ended as you have taken longer then 1 hour to reply. Please run `/verify` again to restart the process.',
-				ephemeral: true
+					'The verification process has ended as you have taken longer then 1 hour to reply. Please run `/verify` again to restart the process.'
 			});
 			return;
 		}
@@ -60,11 +60,9 @@ export class UserCommand extends Command {
 		// check if the code is correct
 		if (verificationRecord.code !== code) {
 			this.container.logger.info(`Verification failed for user ${authorId} with code ${code} should be ${verificationRecord.code}`);
-			await interaction.reply({ content: 'Invalid code. Please try again.', ephemeral: true });
+			await interaction.editReply({ content: 'Invalid code. Please try again.' });
 			return;
 		}
-
-		await interaction.deferReply({ ephemeral: true });
 
 		// Check if another user has the same email and unverify them
 		const otherUser = await this.container.db.user.findFirst({ where: { email: verificationRecord.email } });
