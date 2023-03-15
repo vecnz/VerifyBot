@@ -28,19 +28,27 @@ export class UserCommand extends Command {
 		await interaction.deferReply({ ephemeral: true });
 
 		// check if verification has started
-		let user = await this.container.db.user.findFirst({ where: { id: authorId } });
-		const verificationRecord = (await this.container.db.verificationRecord.findMany({ where: { userId: authorId } })).sort(
-			(a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-		)[0];
+		let user = await this.container.db.user.findFirst({
+			where: { id: authorId }
+		});
+		const verificationRecord = (
+			await this.container.db.verificationRecord.findMany({
+				where: { userId: authorId }
+			})
+		).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
 
 		if (!user || !verificationRecord) {
-			await interaction.editReply({ content: 'You have not started verification. Please run the /verify command.' });
+			await interaction.editReply({
+				content: 'You have not started verification. Please run the /verify command.'
+			});
 			return;
 		}
 
 		if (verificationRecord.completed) {
 			if (!user.verified) {
-				await interaction.editReply({ content: 'You have not started verification. Please run the /verify command.' });
+				await interaction.editReply({
+					content: 'You have not started verification. Please run the /verify command.'
+				});
 				return;
 			}
 			await interaction.editReply({
@@ -59,17 +67,24 @@ export class UserCommand extends Command {
 
 		// check if the code is correct
 		if (verificationRecord.code !== code) {
-			this.container.logger.info(`Verification failed for user ${authorId} with code ${code} should be ${verificationRecord.code}`);
-			await interaction.editReply({ content: 'Invalid code. Please try again.' });
+			// this.container.logger.info(`Verification failed for user ${authorId} with code ${code} should be ${verificationRecord.code}`);
+			await interaction.editReply({
+				content: 'Invalid code. Please try again.'
+			});
 			return;
 		}
 
 		// Check if another user has the same email and unverify them
-		const otherUser = await this.container.db.user.findFirst({ where: { email: verificationRecord.email } });
+		const otherUser = await this.container.db.user.findFirst({
+			where: { email: verificationRecord.email }
+		});
 		if (otherUser) {
 			try {
 				removeVerifiedRoleFromUser(otherUser);
-				await this.container.db.user.update({ where: { id: otherUser.id }, data: { verified: false, email: null } });
+				await this.container.db.user.update({
+					where: { id: otherUser.id },
+					data: { verified: false, email: null }
+				});
 			} catch (error) {
 				await informUserOfError(interaction, error, 'removing the verified status from the user previously verified with this email');
 				return;
@@ -102,6 +117,8 @@ export class UserCommand extends Command {
 			await informUserOfError(interaction, error, 'adding the verified role to you');
 		}
 
-		await interaction.editReply({ content: 'You are now verified across all servers using VicVerify.' });
+		await interaction.editReply({
+			content: 'You are now verified across all servers using VicVerify.'
+		});
 	}
 }
