@@ -2379,14 +2379,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:^0.37.20, discord-api-types@npm:^0.37.23, discord-api-types@npm:^0.37.26":
+"discord-api-types@npm:^0.37.20, discord-api-types@npm:^0.37.23":
   version: 0.37.26
   resolution: "discord-api-types@npm:0.37.26"
   checksum: 66a1e43568af6d928aab253c81a192985c9025de72100881b8b206f1b8a746ef211670e1e88d152f59d7a186176a6afc3f81629ba7ccb91dab264b027f187004
   languageName: node
   linkType: hard
 
-"discord-api-types@npm:^0.37.36":
+"discord-api-types@npm:^0.37.26, discord-api-types@npm:^0.37.36":
   version: 0.37.36
   resolution: "discord-api-types@npm:0.37.36"
   checksum: ba3de3640270738c6fcef515a5d3a22069c89973e7d95984a7ddf1633a6e01fef2b99d4524f4535771694f87e4d779aa7511f21e06abd1c25707b4791c29d386
