@@ -856,13 +856,13 @@ __metadata:
   linkType: hard
 
 "@sapphire/plugin-logger@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@sapphire/plugin-logger@npm:3.0.1"
+  version: 3.0.2
+  resolution: "@sapphire/plugin-logger@npm:3.0.2"
   dependencies:
-    "@sapphire/timestamp": ^1.0.0
+    "@sapphire/timestamp": ^1.0.1
     colorette: ^2.0.19
-    tslib: ^2.4.0
-  checksum: ed95258441b958e1618489c5e5ad336bf5a304a2d3efbfc15104c99133d92938bade2ed5eaf2739eba14d7e153db87af1d77891e15ad2b2414f4f3ecab6d3a27
+    tslib: ^2.5.0
+  checksum: 70b049c5e9bc954c69bf91d1c455e6c909bf1383e3c85f3185a1abed0657367fddf8095a5fff4db8e31f74944ac048ef28a7df5c8beb20b58c2753d9ea68dd7b
   languageName: node
   linkType: hard
 
@@ -954,13 +954,6 @@ __metadata:
   version: 1.0.0
   resolution: "@sapphire/timer-manager@npm:1.0.0"
   checksum: 2f131c2bf1882528c80e6a4aa8f0d3078ae1e2e3d1afc054878fbdb946dc987073d037dad5122e67d20b98e0ec6a37a8e4da7f9c0a91b9711819ad54bbedd6a4
-  languageName: node
-  linkType: hard
-
-"@sapphire/timestamp@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@sapphire/timestamp@npm:1.0.0"
-  checksum: 2852210825626431cb7aee4da9cd04518778854f5b9e8eafc0fa0a57d499251030ad115f0d0c58e15e5b176cfb495301df7418d95e51c4826e9fadc09ff98bbb
   languageName: node
   linkType: hard
 
