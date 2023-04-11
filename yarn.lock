@@ -856,13 +856,13 @@ __metadata:
   linkType: hard
 
 "@sapphire/plugin-logger@npm:^3.0.1":
-  version: 3.0.2
-  resolution: "@sapphire/plugin-logger@npm:3.0.2"
+  version: 3.0.3
+  resolution: "@sapphire/plugin-logger@npm:3.0.3"
   dependencies:
     "@sapphire/timestamp": ^1.0.1
     colorette: ^2.0.19
     tslib: ^2.5.0
-  checksum: 70b049c5e9bc954c69bf91d1c455e6c909bf1383e3c85f3185a1abed0657367fddf8095a5fff4db8e31f74944ac048ef28a7df5c8beb20b58c2753d9ea68dd7b
+  checksum: 5e956474366daea23ef3a1c3d751850f9b7bcff9e9c8819ee71804ad981cbc30f59bdaa1e2701a2b9024e38ad73c327a1b4050dc160ddecea0e3756698ed6ddc
   languageName: node
   linkType: hard
 
