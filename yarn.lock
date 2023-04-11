@@ -846,12 +846,12 @@ __metadata:
   linkType: hard
 
 "@sapphire/plugin-editable-commands@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "@sapphire/plugin-editable-commands@npm:3.0.1"
+  version: 3.0.2
+  resolution: "@sapphire/plugin-editable-commands@npm:3.0.2"
   dependencies:
     "@skyra/editable-commands": ^3.0.1
     tslib: ^2.5.0
-  checksum: fc7dd88d56e41a12199260292ee348d27264bfc49e1e11d7fd18c96da00ff24b089206de669f1bb822ef1242adc51ea64d109bf0f7d5ed585ea1a0a5df3aac63
+  checksum: 34043aa3394d01ddeae8f5a8bafd0d81c8e19a84c71fd2b6037c1f2bc567ecc4bff6bec08e5d17520c9db6ad6201c8f1cfb2b710be7a389686a2707f55193f0e
   languageName: node
   linkType: hard
 
