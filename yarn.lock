@@ -1825,18 +1825,18 @@ __metadata:
   linkType: hard
 
 "bullmq@npm:^3.5.3":
-  version: 3.10.4
-  resolution: "bullmq@npm:3.10.4"
+  version: 3.12.0
+  resolution: "bullmq@npm:3.12.0"
   dependencies:
     cron-parser: ^4.6.0
     glob: ^8.0.3
-    ioredis: ^5.3.0
+    ioredis: ^5.3.2
     lodash: ^4.17.21
     msgpackr: ^1.6.2
     semver: ^7.3.7
     tslib: ^2.0.0
     uuid: ^9.0.0
-  checksum: 9208074b3e5733bb527d732598d2e1ae490dc350eea4a6927b50b3e2be8211c8bfc73a3f77e4b1c14bd633f69dd9ad90db64877bc009c2f1e1bae3e29032f961
+  checksum: 474992627af6894e55721c17943204ec28ec750f4f859b26a862910d1ccc01453aab9e6f3ba11bf039096dd36c87cf1b9e538ff4b9e70edff74c35aec1933fc0
   languageName: node
   linkType: hard
 
@@ -3535,9 +3535,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^5.3.0":
-  version: 5.3.1
-  resolution: "ioredis@npm:5.3.1"
+"ioredis@npm:^5.3.2":
+  version: 5.3.2
+  resolution: "ioredis@npm:5.3.2"
   dependencies:
     "@ioredis/commands": ^1.1.1
     cluster-key-slot: ^1.1.0
@@ -3548,7 +3548,7 @@ __metadata:
     redis-errors: ^1.2.0
     redis-parser: ^3.0.0
     standard-as-callback: ^2.1.0
-  checksum: 6c98cb8f8772ad4bb2b6b7a0a224e4a63f4759f9a28e84205f18788552f08221d51f391c10892dca01a1b10b2804d0a7e6082b0b7decd65538a5fb6b0f4f1f82
+  checksum: 9a23559133e862a768778301efb68ae8c2af3c33562174b54a4c2d6574b976e85c75a4c34857991af733e35c48faf4c356e7daa8fb0a3543d85ff1768c8754bc
   languageName: node
   linkType: hard
 
