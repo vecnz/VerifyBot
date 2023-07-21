@@ -52,7 +52,7 @@
 		"@commitlint/config-conventional": "17.6.1",
 		"@sapphire/eslint-config": "4.4.1",
 		"@sapphire/prettier-config": "1.4.5",
-		"@sapphire/ts-config": "3.3.4",
+		"@sapphire/ts-config": "4.0.1",
 		"@swc/core": "1.3.53",
 		"@types/eslint": "8.37.0",
 		"@types/node": "18.15.13",
