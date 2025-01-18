@@ -1,5 +1,5 @@
 import { github } from '#lib/constants';
-import { Listener, ChatInputCommandErrorPayload } from '@sapphire/framework';
+import { Listener, type ChatInputCommandErrorPayload } from '@sapphire/framework';
 
 export class ChatInputCommandError extends Listener {
 	public async run(err: Error, { interaction, command }: ChatInputCommandErrorPayload): Promise<void> {

@@ -1,5 +1,5 @@
 # Install the following packages:
-FROM node:20 as base
+FROM node:24 as base
 
 WORKDIR /usr/src/app
 
@@ -17,10 +17,8 @@ RUN apt-get update && \
     apt-get autoremove
 
 # Copy the lock files 
-COPY --chown=node:node yarn.lock .
+COPY --chown=node:node pnpm.lock .
 COPY --chown=node:node package.json .
-COPY --chown=node:node .yarnrc.yml .
-COPY --chown=node:node .yarn/ .yarn/
 COPY --chown=node:node prisma/ .
 
 ENTRYPOINT ["dumb-init", "--"]
@@ -33,15 +31,14 @@ FROM base as build
 ENV NODE_ENV="development"
 
 # Copy the source files to the build context
-COPY --chown=node:node tsconfig.base.json .
-COPY --chown=node:node tsup.config.ts .
+COPY --chown=node:node tsconfig.json .
 COPY --chown=node:node src/ src/
 COPY --chown=node:node prisma/ prisma/
 
 # Run the build process
-RUN yarn install --immutable
-RUN yarn run prisma generate
-RUN yarn run build
+RUN pnpm install --immutable
+RUN pnpm run prisma generate
+RUN pnpm run build
 
 ##############
 # Run Stage #

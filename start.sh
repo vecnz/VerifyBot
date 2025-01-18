@@ -1,2 +1,4 @@
-yarn run prisma migrate deploy
-yarn run start
+#!/bin/sh
+
+pnpm exec prisma migrate deploy
+pnpm run start

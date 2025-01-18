@@ -1,7 +1,7 @@
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 
 export class SyncTask extends ScheduledTask {
-	public constructor(context: ScheduledTask.Context, options: ScheduledTask.Options) {
+	public constructor(context: ScheduledTask.LoaderContext, options: ScheduledTask.Options) {
 		super(context, {
 			...options,
 			pattern: '0 0 * * *'
