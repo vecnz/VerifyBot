@@ -3,8 +3,8 @@ import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { PrismaClient } from '@prisma/client';
 import * as nodemailer from 'nodemailer';
 import { envParseInteger, envParseString } from '@skyra/env-utilities';
-import { ScheduledTaskRedisStrategy } from '@sapphire/plugin-scheduled-tasks/register-redis';
 import { Partials, GatewayIntentBits } from 'discord.js';
+import '@sapphire/plugin-scheduled-tasks/register';
 
 const client = new SapphireClient({
 	shards: 'auto',
@@ -15,13 +15,11 @@ const client = new SapphireClient({
 	},
 	partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 	tasks: {
-		strategy: new ScheduledTaskRedisStrategy({
-			bull: {
-				connection: {
-					host: envParseString('REDIS_HOST')
-				}
+		bull: {
+			connection: {
+				host: envParseString('REDIS_HOST')
 			}
-		})
+		}
 	}
 });
 

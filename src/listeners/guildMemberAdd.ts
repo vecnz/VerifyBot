@@ -15,11 +15,9 @@ export class GuildMemberAdd extends Listener {
 
 		if (!user || !user.verified) {
 			// Send a dm to the member saying they need to verify
-			try {
-				await member.send(
-					`Kia ora ${member.user.username}, you need to verify your account before you can fully interact with this server and other VUW servers.\n\nPlease run \`/verify\` to verify your account.`
-				);
-			} catch (error) {}
+			await member.send(
+				`Kia ora ${member.user.username}, you need to verify your account before you can fully interact with this server and other VUW servers.\n\nPlease run \`/verify\` to verify your account.`
+			).catch();
 			return;
 		}
 
@@ -35,11 +33,9 @@ export class GuildMemberAdd extends Listener {
 
 		if (ban) {
 			// ban the user
-			try {
-				await member.send(
-					`Kia ora ${member.user.username}, you have been banned from this server by your linked email, please contact a moderator or admin of the server.`
-				);
-			} catch (error) {}
+			await member.send(
+				`Kia ora ${member.user.username}, you have been banned from this server by your linked email, please contact a moderator or admin of the server.`
+			).catch();
 			await member.ban({ reason: ban.reason });
 			return;
 		}

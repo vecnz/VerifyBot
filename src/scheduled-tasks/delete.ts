@@ -1,7 +1,7 @@
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 
 export class DeleteTask extends ScheduledTask {
-	public constructor(context: ScheduledTask.Context, options: ScheduledTask.Options) {
+	public constructor(context: ScheduledTask.LoaderContext, options: ScheduledTask.Options) {
 		super(context, options);
 	}
 

@@ -1,15 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:best-practices"],
   "packageRules": [
     {
-      "enabled": true,
+      "description": "Automerge non-major updates",
       "matchUpdateTypes": ["minor", "patch"],
-      "matchCurrentVersion": "!/^0/",
-      "automerge": true,
-      "platformAutomerge": true
+      "automerge": true
     }
   ]
 }
