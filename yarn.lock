@@ -1573,7 +1573,7 @@ __metadata:
     dotenv-cra: ^3.0.2
     eslint: 8.38.0
     eslint-config-prettier: 8.8.0
-    eslint-plugin-prettier: 4.2.1
+    eslint-plugin-prettier: 4.2.5
     husky: 8.0.3
     lint-staged: 13.2.1
     nodemailer: ^6.8.0
@@ -2730,7 +2730,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:4.2.1, eslint-plugin-prettier@npm:^4.2.1":
+"eslint-plugin-prettier@npm:4.2.5":
+  version: 4.2.5
+  resolution: "eslint-plugin-prettier@npm:4.2.5"
+  dependencies:
+    prettier-linter-helpers: ^1.0.0
+  peerDependencies:
+    eslint: ">=7.28.0"
+    prettier: ">=2.0.0"
+  peerDependenciesMeta:
+    eslint-config-prettier:
+      optional: true
+  checksum: 22c29ba685f18516e3b1595e062849ccc108996a759da6067ff5d876519a5f81c8ba92c0c5623a1c62b593d417619ba44ab3b6ec1450ca753c078fd92970b883
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-prettier@npm:^4.2.1":
   version: 4.2.1
   resolution: "eslint-plugin-prettier@npm:4.2.1"
   dependencies:
