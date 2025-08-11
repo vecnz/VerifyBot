@@ -1197,13 +1197,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:8.37.0":
-  version: 8.37.0
-  resolution: "@types/eslint@npm:8.37.0"
+"@types/eslint@npm:8.56.12":
+  version: 8.56.12
+  resolution: "@types/eslint@npm:8.56.12"
   dependencies:
     "@types/estree": "*"
     "@types/json-schema": "*"
-  checksum: 06d3b3fba12004294591b5c7a52e3cec439472195da54e096076b1f2ddfbb8a445973b9681046dd530a6ac31eca502f635abc1e3ce37d03513089358e6f822ee
+  checksum: 0f7710ee02a256c499514251f527f84de964bb29487db840408e4cde79283124a38935597636d2265756c34dd1d902e1b00ae78930d4a0b55111909cb7b80d84
   languageName: node
   linkType: hard
 
@@ -1584,7 +1584,7 @@ __metadata:
     "@sapphire/utilities": ^3.11.0
     "@skyra/env-utilities": ^1.1.0
     "@swc/core": 1.13.3
-    "@types/eslint": 8.37.0
+    "@types/eslint": 8.56.12
     "@types/node": 20.14.10
     "@types/nodemailer": 6.4.17
     "@types/ws": 8.5.4
