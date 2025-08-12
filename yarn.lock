@@ -1281,12 +1281,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:8.5.4":
-  version: 8.5.4
-  resolution: "@types/ws@npm:8.5.4"
+"@types/ws@npm:8.18.1":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
   dependencies:
     "@types/node": "*"
-  checksum: fefbad20d211929bb996285c4e6f699b12192548afedbe4930ab4384f8a94577c9cd421acaad163cacd36b88649509970a05a0b8f20615b30c501ed5269038d1
+  checksum: 0331b14cde388e2805af66cad3e3f51857db8e68ed91e5b99750915e96fe7572e58296dc99999331bbcf08f0ff00a227a0bb214e991f53c2a5aca7b0e71173fa
   languageName: node
   linkType: hard
 
@@ -1587,7 +1587,7 @@ __metadata:
     "@types/eslint": 8.56.12
     "@types/node": 20.19.10
     "@types/nodemailer": 6.4.17
-    "@types/ws": 8.5.4
+    "@types/ws": 8.18.1
     "@typescript-eslint/eslint-plugin": 5.59.0
     "@typescript-eslint/parser": 5.59.0
     bull: ^4.10.2
