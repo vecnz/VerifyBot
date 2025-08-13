@@ -1560,7 +1560,7 @@ __metadata:
     prisma: 4.13.0
     reflect-metadata: ^0.1.13
     ts-node: 10.9.2
-    tsc-watch: 6.0.0
+    tsc-watch: 6.3.1
     tsup: 6.7.0
     typescript: 4.9.5
   languageName: unknown
@@ -5990,9 +5990,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsc-watch@npm:6.0.0":
-  version: 6.0.0
-  resolution: "tsc-watch@npm:6.0.0"
+"tsc-watch@npm:6.3.1":
+  version: 6.3.1
+  resolution: "tsc-watch@npm:6.3.1"
   dependencies:
     cross-spawn: ^7.0.3
     node-cleanup: ^2.1.2
@@ -6002,7 +6002,7 @@ __metadata:
     typescript: "*"
   bin:
     tsc-watch: dist/lib/tsc-watch.js
-  checksum: 34e74a703ecb28689d0f6ba311781ff68be47f5f095439654b095f3ea4a5921708fca61b5727e33527639a9a147b42d10bc3fe3595afee92b41b2bacfba06043
+  checksum: 891b5a66c8c6e0a021e8860b398305d39e195650fd2354028e2e090a4299ee094c47186827fc3719170334cb293c336730e971d0661476b92f5defa375273fba
   languageName: node
   linkType: hard
 
