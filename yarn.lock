@@ -828,13 +828,12 @@ __metadata:
   linkType: hard
 
 "@sapphire/plugin-logger@npm:^3.0.1":
-  version: 3.0.3
-  resolution: "@sapphire/plugin-logger@npm:3.0.3"
+  version: 3.0.7
+  resolution: "@sapphire/plugin-logger@npm:3.0.7"
   dependencies:
     "@sapphire/timestamp": ^1.0.1
-    colorette: ^2.0.19
-    tslib: ^2.5.0
-  checksum: 5e956474366daea23ef3a1c3d751850f9b7bcff9e9c8819ee71804ad981cbc30f59bdaa1e2701a2b9024e38ad73c327a1b4050dc160ddecea0e3756698ed6ddc
+    colorette: ^2.0.20
+  checksum: b5939aaf0ffc69695d7aa6c01b8fd8ea426f4c5a55035684761162c68977364a7dd0caf305ca1b4db4c481c35c9e21d2f92d90966756baa13e2cf406057b0933
   languageName: node
   linkType: hard
 
