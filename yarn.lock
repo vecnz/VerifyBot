@@ -947,13 +947,13 @@ __metadata:
   linkType: hard
 
 "@sapphire/type@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@sapphire/type@npm:2.3.0"
+  version: 2.6.0
+  resolution: "@sapphire/type@npm:2.6.0"
   dependencies:
     "@discordjs/node-pre-gyp": ^0.4.5
-    nan: ^2.17.0
-    tslib: ^2.4.1
-  checksum: 78473401140eb4af26c11f8cb2eb5f186369300a4a4105fcd720746abc32c69e3065e779f304416ea21a535ed0afcb9b298dfac3f9c92c13e9b045203b45f5fd
+    nan: ^2.22.0
+    tslib: ^2.8.1
+  checksum: 3c54e255160f8ea8aeb5f8b4de30ccfc2585ae63b968c06f80d27735f03601cab24d21f9dda0d75d5593a2c8045631de53cb16719412874906fb8a7986814325
   languageName: node
   linkType: hard
 
@@ -4347,12 +4347,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.17.0":
-  version: 2.17.0
-  resolution: "nan@npm:2.17.0"
+"nan@npm:^2.22.0":
+  version: 2.23.0
+  resolution: "nan@npm:2.23.0"
   dependencies:
     node-gyp: latest
-  checksum: ec609aeaf7e68b76592a3ba96b372aa7f5df5b056c1e37410b0f1deefbab5a57a922061e2c5b369bae9c7c6b5e6eecf4ad2dac8833a1a7d3a751e0a7c7f849ed
+  checksum: 2d1fd612d69d4cf4dd63c8ce61ee6aa36ace2caf5363c98b3232833fc24ab761fb96742682997716dea5fb9abf57e2fe7e94e76e0c4c302ed1fcde5b908f3e8f
   languageName: node
   linkType: hard
 
@@ -5906,7 +5906,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.6.2":
+"tslib@npm:^2.6.2, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
