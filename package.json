@@ -56,7 +56,7 @@
 		"@swc/core": "1.13.3",
 		"@types/eslint": "8.56.12",
 		"@types/node": "20.19.39",
-		"@types/nodemailer": "6.4.17",
+		"@types/nodemailer": "6.4.23",
 		"@types/ws": "8.18.1",
 		"@typescript-eslint/eslint-plugin": "5.62.0",
 		"@typescript-eslint/parser": "5.62.0",
