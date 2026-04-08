@@ -44,7 +44,7 @@
 		"discord-api-types": "^0.37.26",
 		"discord.js": "^14.7.1",
 		"dotenv-cra": "^3.0.2",
-		"nodemailer": "^6.8.0",
+		"nodemailer": "^8.0.0",
 		"reflect-metadata": "^0.1.13"
 	},
 	"devDependencies": {
