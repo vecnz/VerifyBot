@@ -1236,12 +1236,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/nodemailer@npm:6.4.17":
-  version: 6.4.17
-  resolution: "@types/nodemailer@npm:6.4.17"
+"@types/nodemailer@npm:6.4.23":
+  version: 6.4.23
+  resolution: "@types/nodemailer@npm:6.4.23"
   dependencies:
     "@types/node": "*"
-  checksum: 498b702575111494a42cf9cdd3d399f0308c3b3b0244e7f53008924327955a16b39ba0bf99a5ccf17af9fd2bc50a61a76ae7e8a75498a426ea2f828a05202eab
+  checksum: 4ec510436647cedc3cc5fbb3625f6f3b2ffd4279ca364c5e6427d41178170f97f1eed634ef3c657b81d260cca0b12afe8c99295b74ed75350e6dfb9ca1925b29
   languageName: node
   linkType: hard
 
@@ -1443,7 +1443,7 @@ __metadata:
     "@swc/core": 1.13.3
     "@types/eslint": 8.56.12
     "@types/node": 20.19.39
-    "@types/nodemailer": 6.4.17
+    "@types/nodemailer": 6.4.23
     "@types/ws": 8.18.1
     "@typescript-eslint/eslint-plugin": 5.62.0
     "@typescript-eslint/parser": 5.62.0
