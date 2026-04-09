@@ -24,7 +24,7 @@
 		"#root/*": "./dist/*.js"
 	},
 	"dependencies": {
-		"@prisma/client": "4.13.0",
+		"@prisma/client": "4.16.2",
 		"@sapphire/decorators": "^6.0.0",
 		"@sapphire/discord-utilities": "^3.0.0",
 		"@sapphire/discord.js-utilities": "^6.0.0",
@@ -69,7 +69,7 @@
 		"pinst": "3.0.0",
 		"prettier": "2.8.8",
 		"pretty-quick": "3.3.1",
-		"prisma": "4.13.0",
+		"prisma": "4.16.2",
 		"ts-node": "10.9.2",
 		"tsc-watch": "6.3.1",
 		"tsup": "6.7.0",
