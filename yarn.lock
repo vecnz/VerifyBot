@@ -1240,12 +1240,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.19.39":
-  version: 20.19.39
-  resolution: "@types/node@npm:20.19.39"
+"@types/node@npm:20.19.43":
+  version: 20.19.43
+  resolution: "@types/node@npm:20.19.43"
   dependencies:
     undici-types: ~6.21.0
-  checksum: ebd35fc49e79bb29b9af50b0ca442160c74e9b059e0f814240033b6b757dd15399d9fd1362e32c8246322b1c703f048af793656fc9dfd4c2484cf2b1702f6820
+  checksum: c959b5d256b073da95aa1892acb071b487c2f652f98b2cb75e92657d51b99bd691aa811023fb13acd6752bc1bcb75dc579db02190a4da70926cf6f372011bc4e
   languageName: node
   linkType: hard
 
@@ -1462,7 +1462,7 @@ __metadata:
     "@skyra/env-utilities": ^1.1.0
     "@swc/core": 1.15.24
     "@types/eslint": 8.56.12
-    "@types/node": 20.19.39
+    "@types/node": 20.19.43
     "@types/nodemailer": 6.4.23
     "@types/ws": 8.18.1
     "@typescript-eslint/eslint-plugin": 5.62.0
