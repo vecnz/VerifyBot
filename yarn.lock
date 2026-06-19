@@ -701,11 +701,11 @@ __metadata:
   linkType: hard
 
 "@sapphire/decorators@npm:^6.0.0":
-  version: 6.0.1
-  resolution: "@sapphire/decorators@npm:6.0.1"
+  version: 6.2.0
+  resolution: "@sapphire/decorators@npm:6.2.0"
   dependencies:
-    tslib: ^2.5.0
-  checksum: 348891a24f572eba80e805c30fb517987bf8cdf13318e2f1b0584f61e6fe10027593c0123fe5eff37a815d3a9fefab26c926b73c29a6b672faf9f074ef6b4044
+    tslib: ^2.8.1
+  checksum: 7bc0149178c41327b4b3b2b0d90c565d13f9622a69b7ced5a2a04db5ca834c30817dfa58d79def1c3a4e5c6972cbedee87d8ace41d1d53b2d7dcd31e411d58e7
   languageName: node
   linkType: hard
 
