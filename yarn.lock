@@ -1478,7 +1478,7 @@ __metadata:
     eslint-plugin-prettier: 4.2.5
     husky: 8.0.3
     lint-staged: 13.3.0
-    nodemailer: ^6.8.0
+    nodemailer: ^10.0.0
     npm-run-all: 4.1.5
     pinst: 3.0.0
     prettier: 2.8.8
@@ -4497,10 +4497,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.8.0":
-  version: 6.9.9
-  resolution: "nodemailer@npm:6.9.9"
-  checksum: 9af862b497273796ad6ba7ca9eac23a7d69737554f6dd51cfd3557f60902c56344158192672f1208daf00340a47a9e1805bd809965edc191011b35dd98a74be1
+"nodemailer@npm:^10.0.0":
+  version: 10.0.15
+  resolution: "nodemailer@npm:10.0.15"
+  checksum: cbcf694957b94d7858de8519ae6d2d2dc4dac13a368b64a51a0ca553b5c5c64a0566e3df74fda973bc13eeb6694d541706d189506b7f75122f95c15ea40e7743
   languageName: node
   linkType: hard
 
