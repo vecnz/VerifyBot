@@ -41,7 +41,7 @@
 		"bull": "^4.10.2",
 		"bullmq": "^3.5.3",
 		"colorette": "^2.0.19",
-		"discord-api-types": "^0.37.26",
+		"discord-api-types": "^0.38.0",
 		"discord.js": "^14.7.1",
 		"dotenv-cra": "^3.0.2",
 		"nodemailer": "^6.8.0",
